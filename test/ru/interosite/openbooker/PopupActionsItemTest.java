@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 
 import android.content.Context;
 import android.content.res.Resources;
+import static junit.framework.Assert.assertTrue;
 
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
@@ -21,20 +22,37 @@ public class PopupActionsItemTest {
 	private Resources mResources = null;
 
 	@Before
-	public void setUp() {
+	public void setUp() {		
 		mContext = Robolectric.application.getApplicationContext();
 		mResources = mContext.getResources();
 	}
-
+	
 	@Test
-	public void testAction() {
-		PopupActionItem actionIncome = new PopupActionItem(ACTION_INCOME,
+	public void configureActionsPopup() {
+		
+		final PopupActionItem actionIncome = new PopupActionItem(ACTION_INCOME,
 				mContext.getString(R.string.add_income), mResources.getDrawable(R.drawable.ic_action_income));
-		PopupActionItem actionExpense = new PopupActionItem(ACTION_EXPENSE,
+		
+		final PopupActionItem actionExpense = new PopupActionItem(ACTION_EXPENSE,
 				mContext.getString(R.string.add_expense),
 				mResources.getDrawable(R.drawable.ic_action_expense));
-		PopupActionItem actionMove = new PopupActionItem(ACTION_MOVE,
+		
+		final PopupActionItem actionMove = new PopupActionItem(ACTION_MOVE,
 				mContext.getString(R.string.add_move), mResources.getDrawable(R.drawable.ic_action_move));
+		
+		PopupActionsWidget widget = new PopupActionsWidget();
+		widget.addItem(actionIncome);
+		widget.addItem(actionExpense);
+		widget.addItem(actionMove);
+		
+		widget.setItemSelectedListener(new PopupActionsWidget.IItemSelectListener() {
+			public void onItemSelected(int actionId) {
+				assertTrue(actionId==actionExpense.getId());
+			}
+		});
+		
+		new MethodInvoker(widget).call("fireClick", int.class).with(actionMove.getId());
+		
 	}
-
+	
 }
