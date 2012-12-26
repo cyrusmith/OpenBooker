@@ -2,7 +2,10 @@
 <resources>
 
     <string name="app_name">OpenBooker</string>
-    <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
+    
+	<string name="add_income">Add income</string>    
+	<string name="add_expense">Add spending</string>    
+	<string name="add_move">Move funds</string>    
 
 </resources>

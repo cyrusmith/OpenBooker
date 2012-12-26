@@ -24,7 +24,6 @@ public class MainActivityTest {
 	@Test
 	public void checkIsStarted() {
 		mActivity.onCreate(null);
-		View hello = mActivity.findViewById(R.id.hello_view);
-		assertThat(hello, notNullValue());
+		assertThat(mActivity, notNullValue());
 	}
 }
