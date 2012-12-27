@@ -27,6 +27,20 @@ public class PopupActionsItemTest {
 		mResources = mContext.getResources();
 	}
 	
+	@Test(expected=IllegalArgumentException.class)	
+	public void noDuplicateIds() {
+		PopupActionItem actionIncome1 = new PopupActionItem(ACTION_INCOME,
+				mContext.getString(R.string.add_income), mResources.getDrawable(R.drawable.ic_action_income));
+		
+		PopupActionItem actionIncome2 = new PopupActionItem(ACTION_INCOME,
+				mContext.getString(R.string.add_expense), mResources.getDrawable(R.drawable.ic_action_expense));		
+		
+		PopupActionsWidget widget = new PopupActionsWidget(Robolectric.application.getApplicationContext());
+		
+		widget.addItem(actionIncome1);
+		widget.addItem(actionIncome2);
+	}
+	
 	@Test
 	public void configureActionsPopup() {
 		
@@ -40,14 +54,14 @@ public class PopupActionsItemTest {
 		final PopupActionItem actionMove = new PopupActionItem(ACTION_MOVE,
 				mContext.getString(R.string.add_move), mResources.getDrawable(R.drawable.ic_action_move));
 		
-		PopupActionsWidget widget = new PopupActionsWidget();
+		PopupActionsWidget widget = new PopupActionsWidget(Robolectric.application.getApplicationContext());
 		widget.addItem(actionIncome);
 		widget.addItem(actionExpense);
 		widget.addItem(actionMove);
 		
 		widget.setItemSelectedListener(new PopupActionsWidget.IItemSelectListener() {
 			public void onItemSelected(int actionId) {
-				assertTrue(actionId==actionExpense.getId());
+				assertTrue(actionId==ACTION_MOVE);
 			}
 		});
 		

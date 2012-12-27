@@ -1,6 +1,7 @@
 package ru.interosite.openbooker;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Before;
@@ -23,5 +24,11 @@ public class MainActivityTest {
 	public void checkIsStarted() {
 		mActivity.onCreate(null);
 		assertThat(mActivity, notNullValue());
+	}
+	
+	@Test
+	public void checkAutobox() {
+		Integer ii = 1;
+		assertThat(ii, equalTo(1));
 	}
 }

@@ -3,5 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity" >
-
+<Button android:id="@+id/test_button"
+    android:layout_marginTop="100dip"
+    android:text="Test me"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    />
 </RelativeLayout>
