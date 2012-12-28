@@ -1,4 +1,4 @@
-package ru.interosite.openbooker.domains.accounts;
+package ru.interosite.openbooker.datamodel.domain;
 
 public class IncomeSource {
 	private String mTitle = null;

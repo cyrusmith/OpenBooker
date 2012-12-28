@@ -1,9 +1,9 @@
-package ru.interosite.openbooker.domains.accounts;
-
-import ru.interosite.openbooker.domains.funds.Funds;
+package ru.interosite.openbooker.datamodel.domain;
 
 public class Account {
 
+	Account(AccountType type) {}
+	
 	public void refill(Funds funds, IncomeSource source) {}	
 	
 	public void debit(Funds funds, ExpenseType type) {}

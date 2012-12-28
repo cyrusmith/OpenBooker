@@ -5,7 +5,7 @@ import java.awt.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ru.interosite.openbooker.domains.funds.Currency;
+import ru.interosite.openbooker.datamodel.domain.Currency;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 

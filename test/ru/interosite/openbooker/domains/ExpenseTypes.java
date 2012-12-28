@@ -7,7 +7,7 @@ import static org.junit.Assert.assertThat;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ru.interosite.openbooker.domains.accounts.ExpenseType;
+import ru.interosite.openbooker.datamodel.domain.ExpenseType;
 
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 

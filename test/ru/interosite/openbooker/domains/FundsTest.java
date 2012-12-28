@@ -3,9 +3,9 @@ package ru.interosite.openbooker.domains;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ru.interosite.openbooker.domains.funds.Currency;
-import ru.interosite.openbooker.domains.funds.Funds;
-import ru.interosite.openbooker.domains.funds.IllegalOperation;
+import ru.interosite.openbooker.datamodel.domain.Currency;
+import ru.interosite.openbooker.datamodel.domain.Funds;
+import ru.interosite.openbooker.datamodel.domain.IllegalOperation;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;

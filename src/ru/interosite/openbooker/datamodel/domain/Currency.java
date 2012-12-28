@@ -1,4 +1,4 @@
-package ru.interosite.openbooker.domains.funds;
+package ru.interosite.openbooker.datamodel.domain;
 
 public enum Currency {
 

@@ -5,11 +5,13 @@ import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ru.interosite.openbooker.domains.accounts.Account;
-import ru.interosite.openbooker.domains.accounts.ExpenseType;
-import ru.interosite.openbooker.domains.accounts.IncomeSource;
-import ru.interosite.openbooker.domains.funds.Currency;
-import ru.interosite.openbooker.domains.funds.Funds;
+import ru.interosite.openbooker.datamodel.domain.Account;
+import ru.interosite.openbooker.datamodel.domain.AccountType;
+import ru.interosite.openbooker.datamodel.domain.Currency;
+import ru.interosite.openbooker.datamodel.domain.EntitiesFactory;
+import ru.interosite.openbooker.datamodel.domain.ExpenseType;
+import ru.interosite.openbooker.datamodel.domain.Funds;
+import ru.interosite.openbooker.datamodel.domain.IncomeSource;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertThat;
 
@@ -24,8 +26,8 @@ public class Accounts {
 	@Test
 	public void accOperations() {
 		
-		Account acc1 = new Account();
-		Account acc2 = new Account();
+		Account acc1 = EntitiesFactory.createAccount(AccountType.CASH);
+		Account acc2 = EntitiesFactory.createAccount(AccountType.CREDIT_CARD);
 		
 		acc1.refill(new Funds(10000, Currency.RUR), new IncomeSource("Salary"));
 		acc1.debit(new Funds(5000, Currency.RUR), new ExpenseType());

@@ -9,7 +9,7 @@ import java.awt.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ru.interosite.openbooker.domains.accounts.IncomeSource;
+import ru.interosite.openbooker.datamodel.domain.IncomeSource;
 
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
