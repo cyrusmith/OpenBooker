@@ -12,11 +12,14 @@ import ru.interosite.openbooker.datamodel.domain.EntitiesFactory;
 import ru.interosite.openbooker.datamodel.domain.ExpenseType;
 import ru.interosite.openbooker.datamodel.domain.Funds;
 import ru.interosite.openbooker.datamodel.domain.IncomeSource;
+import ru.interosite.openbooker.datamodel.domain.UnsufficientFundsException;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
@@ -26,14 +29,42 @@ public class Accounts {
 	@Test
 	public void accOperations() {
 		
-		Account acc1 = EntitiesFactory.createAccount(AccountType.CASH);
-		Account acc2 = EntitiesFactory.createAccount(AccountType.CREDIT_CARD);
+		Account acc1 = EntitiesFactory.createAccount(AccountType.CASH, new Funds(100000, Currency.RUR));
+		Account acc2 = EntitiesFactory.createAccount(AccountType.CREDIT_CARD, new Funds(100000, Currency.RUR));
 		
-		acc1.refill(new Funds(10000, Currency.RUR), new IncomeSource("Salary"));
-		acc1.debit(new Funds(5000, Currency.RUR), new ExpenseType());
+		assertThat(acc1.getBalance(), notNullValue());
+		assertThat(acc2.getBalance().size(), equalTo(1));
 		
-		acc1.moveTo(acc2, new Funds(5000, Currency.RUR));
+		acc1.debit(new Funds(50000, Currency.USD), new ExpenseType("Food"));
 		
+		assertThat(acc1.getBalance().size(), equalTo(2));
+		
+		acc1.refill(new Funds(20000, Currency.RUR), new IncomeSource("Salary"));
+		
+		assertThat(acc1.getBalance().size(), equalTo(2));
+				
+		try {
+			acc1.moveTo(acc2, new Funds(50000, Currency.RUR));
+		} catch (UnsufficientFundsException e) {
+			throw new AssertionError("UnsufficientFundsException: " + e.getMessage());
+		}
+				
+		assertEquals(70000, acc1.getBalance().get(Currency.RUR).getValue());
+		assertEquals(150000, acc2.getBalance().get(Currency.RUR).getValue());
+	}
+		
+	@Test(expected=UnsufficientFundsException.class)
+	public void moveFunds() throws UnsufficientFundsException {
+		Account acc1 = EntitiesFactory.createAccount(AccountType.CASH, new Funds(100000, Currency.RUR));
+		Account acc2 = EntitiesFactory.createAccount(AccountType.CREDIT_CARD, new Funds(100000, Currency.USD));	
+		acc1.moveTo(acc2, new Funds(10000, Currency.USD));
+	}
+	
+	@Test
+	public void hasFunds() throws UnsufficientFundsException {
+		Account acc = EntitiesFactory.createAccount(AccountType.CASH, new Funds(100000, Currency.RUR));
+		assertTrue(acc.hasFunds(new Funds(40000, Currency.RUR)));
+		assertTrue(!acc.hasFunds(new Funds(1000, Currency.USD)));
 	}
 	
 }

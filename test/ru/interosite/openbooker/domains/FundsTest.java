@@ -67,5 +67,10 @@ public class FundsTest {
 		Funds funds2 = new Funds(66500, Currency.USD);
 		funds1.plus(funds2);
 	}
+	
+	public void reverseFunds() {
+		Funds funds1 = new Funds(66500, Currency.RUR);
+		assertEquals(0, funds1.plus(funds1.reverse()).getValue());
+	}
 
 }
