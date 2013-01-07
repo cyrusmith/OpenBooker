@@ -15,12 +15,16 @@ public class BaseEntity {
 		return mId;
 	}
 	
+	public void setNew() {
+		CompoundAction.getCurrentAction().addNew(this);	
+	}
+	
 	public void setDirty() {
-				
+		CompoundAction.getCurrentAction().addDirty(this);	
 	}
 	
-	public void setClean() {
+	public void setRemove() {
+		CompoundAction.getCurrentAction().addRemove(this);	
+	}
 		
-	}
-	
 }

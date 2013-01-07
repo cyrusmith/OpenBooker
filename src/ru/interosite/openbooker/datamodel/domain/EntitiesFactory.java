@@ -8,7 +8,9 @@ public class EntitiesFactory {
 		if(initialBalance==null) {
 			throw new IllegalArgumentException("Account's balance is null");
 		}
-		return new Account(type, initialBalance);
+		Account account = new Account(type, initialBalance);
+		account.setNew();
+		return account;
 	}
 	
 }

@@ -1,14 +1,13 @@
 package ru.interosite.openbooker.datamodel.mapper;
 
-import ru.interosite.openbooker.datamodel.domain.BaseEntity;
-import ru.interosite.openbooker.datamodel.domain.IMapper;
+import ru.interosite.openbooker.datamodel.domain.Account;
 
-public class AccountMapper implements IMapper {
+class AccountMapper extends BaseMapper {
 
 	@Override
-	public BaseEntity find(Long id) {
+	public Account find(Long id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
 }

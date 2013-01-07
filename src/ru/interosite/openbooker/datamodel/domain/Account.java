@@ -15,6 +15,7 @@ public class Account extends BaseEntity {
 	Account(AccountType type, Funds initialBalance) {
 		mType = type;
 		mFunds.put(initialBalance.getCurrency(), initialBalance);
+		//TODO init analytics
 	}
 	
 	public void setType(AccountType type) {

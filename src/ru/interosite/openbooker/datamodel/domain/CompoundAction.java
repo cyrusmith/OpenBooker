@@ -1,9 +1,10 @@
-package ru.interosite.openbooker.datamodel;
+package ru.interosite.openbooker.datamodel.domain;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.interosite.openbooker.datamodel.domain.BaseEntity;
+import ru.interosite.openbooker.datamodel.mapper.MapperRegistry;
+
 
 public class CompoundAction {
 	
@@ -21,9 +22,10 @@ public class CompoundAction {
 		return mAction.get();
 	}
 	
-	public static void execute() {
+	public static boolean execute() {
 		CompoundAction action = mAction.get();
-		action.doAction();
+		action.executeTransaction();
+		return true;
 	}
 		
 	private List<BaseEntity> mNewEntities = new ArrayList<BaseEntity>();
@@ -72,15 +74,17 @@ public class CompoundAction {
 		return true;
 	}
 	
-	private void doAction() {
-		doInserts();
-		doUpdates();
-		doDeletes();
+	private void executeTransaction() {
+		try {
+			doInserts();
+			doUpdates();
+			doDeletes();
+		}
 	}
 	
 	private void doInserts() {
 		for(BaseEntity entity : mNewEntities) {
-			//TODO
+			MapperRegistry.getInstance().get(entity.getClass()).insert(entity);
 		}
 	}
 	

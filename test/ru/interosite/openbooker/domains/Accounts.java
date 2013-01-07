@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 
 import ru.interosite.openbooker.datamodel.domain.Account;
 import ru.interosite.openbooker.datamodel.domain.AccountType;
+import ru.interosite.openbooker.datamodel.domain.CompoundAction;
 import ru.interosite.openbooker.datamodel.domain.Currency;
 import ru.interosite.openbooker.datamodel.domain.EntitiesFactory;
 import ru.interosite.openbooker.datamodel.domain.ExpenseType;
@@ -65,6 +66,13 @@ public class Accounts {
 		Account acc = EntitiesFactory.createAccount(AccountType.CASH, new Funds(100000, Currency.RUR));
 		assertTrue(acc.hasFunds(new Funds(40000, Currency.RUR)));
 		assertTrue(!acc.hasFunds(new Funds(1000, Currency.USD)));
+	}
+	
+	@Test
+	public void createPersistent() {
+		CompoundAction.open();		
+		Account acc = EntitiesFactory.createAccount(AccountType.CASH, new Funds(100000, Currency.RUR));		
+		CompoundAction.execute();
 	}
 	
 }
