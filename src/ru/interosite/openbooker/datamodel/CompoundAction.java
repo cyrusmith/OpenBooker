@@ -30,29 +30,69 @@ public class CompoundAction {
 	private List<BaseEntity> mDirtyEntities = new ArrayList<BaseEntity>();
 	private List<BaseEntity> mRemoveEntities = new ArrayList<BaseEntity>();
 	
-	private void doAction() {
-		
-	}
-	
 	public void addNew(BaseEntity entity) {
 		
-		if(entity==null) {
-			return;
-		}
-		
-		if(mNewEntities.contains(entity)) {
-			return;
-		}
-		
-		if(mRemoveEntities.contains(entity)) {
-			return;
-		}
-		
-		if(mDirtyEntities.contains(entity)) {
+		if(!isValidForAdd(entity)) {
 			return;
 		}
 		
 		mNewEntities.add(entity);
 	}
+		
+	public void addDirty(BaseEntity entity) {
+		if(!isValidForAdd(entity)) {
+			return;
+		}
+		mDirtyEntities.add(entity);
+	}
 	
+	public void addRemove(BaseEntity entity) {
+		if(!isValidForAdd(entity)) {
+			return;
+		}
+		mRemoveEntities.add(entity);
+	}
+	
+	private boolean isValidForAdd(BaseEntity entity) {
+		if(entity==null) {
+			return false;
+		}
+		
+		if(mNewEntities.contains(entity)) {
+			return false;
+		}
+		
+		if(mRemoveEntities.contains(entity)) {
+			return false;
+		}
+		
+		if(mDirtyEntities.contains(entity)) {
+			return false;
+		}		
+		return true;
+	}
+	
+	private void doAction() {
+		doInserts();
+		doUpdates();
+		doDeletes();
+	}
+	
+	private void doInserts() {
+		for(BaseEntity entity : mNewEntities) {
+			//TODO
+		}
+	}
+	
+	private void doUpdates() {
+		for(BaseEntity entity : mDirtyEntities) {
+			//TODO
+		}
+	}
+	
+	private void doDeletes() {
+		for(BaseEntity entity : mRemoveEntities) {
+			//TODO
+		}
+	}
 }
