@@ -8,6 +8,12 @@ import ru.interosite.openbooker.datamodel.mapper.MapperRegistry;
 
 public class CompoundAction {
 	
+	public interface ICompoundActionListener {
+		public void onBeginTransaction();
+		public void onTransactionSuccessful();
+		public void onEndTransaction();
+	}
+	
 	private static ThreadLocal<CompoundAction> mAction = new ThreadLocal<CompoundAction>() {
 		protected CompoundAction initialValue() {
 			return new CompoundAction();
