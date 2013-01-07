@@ -1,16 +1,15 @@
 package ru.interosite.openbooker.datamodel.mapper;
 
 import ru.interosite.openbooker.ApplicationInfo;
+import ru.interosite.openbooker.datamodel.domain.CompoundAction;
 import android.content.Context;
-import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class DatabaseGateway {
+public class DatabaseGateway implements CompoundAction.ICompoundActionListener {
 	
 	private static final String DATABASE_NAME = "open_booker_db";
-	
+
 	private static ThreadLocal<DatabaseGateway> mInstance = new ThreadLocal<DatabaseGateway>() {
 		@Override
 		protected DatabaseGateway initialValue() {
@@ -24,7 +23,7 @@ public class DatabaseGateway {
 	
 	private SQLiteOpenHelper mDbOpener = null;	
 	
-	public void init(Context context) {
+	public DatabaseGateway init(Context context) {
 		mDbOpener = new SQLiteOpenHelper(context, DATABASE_NAME, null, ApplicationInfo.getVersionCode(context)) {
 						
 			@Override
@@ -40,10 +39,32 @@ public class DatabaseGateway {
 				
 			}
 		};
+		return this;
 	}
 	
 	public SQLiteOpenHelper getDatabaseOpener() {
 		return mDbOpener;
+	}
+
+	@Override
+	public void onBegin() {
+		if(mDbOpener!=null) {
+			mDbOpener.getWritableDatabase().beginTransaction();
+		}
+	}
+
+	@Override
+	public void onSuccessful() {
+		if(mDbOpener!=null) {
+			mDbOpener.getWritableDatabase().setTransactionSuccessful();
+		}
+	}
+
+	@Override
+	public void onEnd() {
+		if(mDbOpener!=null) {
+			mDbOpener.getWritableDatabase().endTransaction();
+		}
 	}
 	
 }

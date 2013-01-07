@@ -14,6 +14,7 @@ import ru.interosite.openbooker.datamodel.domain.ExpenseType;
 import ru.interosite.openbooker.datamodel.domain.Funds;
 import ru.interosite.openbooker.datamodel.domain.IncomeSource;
 import ru.interosite.openbooker.datamodel.domain.UnsufficientFundsException;
+import ru.interosite.openbooker.datamodel.mapper.DatabaseGateway;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -22,6 +23,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 
+import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 @RunWith(RobolectricTestRunner.class)
@@ -56,6 +58,7 @@ public class Accounts {
 		
 	@Test(expected=UnsufficientFundsException.class)
 	public void moveFunds() throws UnsufficientFundsException {
+		
 		Account acc1 = EntitiesFactory.createAccount(AccountType.CASH, new Funds(100000, Currency.RUR));
 		Account acc2 = EntitiesFactory.createAccount(AccountType.CREDIT_CARD, new Funds(100000, Currency.USD));	
 		acc1.moveTo(acc2, new Funds(10000, Currency.USD));
@@ -70,7 +73,8 @@ public class Accounts {
 	
 	@Test
 	public void createPersistent() {
-		CompoundAction.open();		
+		DatabaseGateway gateway = DatabaseGateway.getInstance().init(Robolectric.application.getApplicationContext());
+		CompoundAction.open(gateway);		
 		Account acc = EntitiesFactory.createAccount(AccountType.CASH, new Funds(100000, Currency.RUR));		
 		CompoundAction.execute();
 	}

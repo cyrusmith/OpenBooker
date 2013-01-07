@@ -18,23 +18,5 @@ public abstract class BaseMapper implements IMapper {
 		return null;
 	}
 	
-	@Override
-	public int insert(BaseEntity entity) {
-		SQLiteStatement statement = 
-		return 0;
-	}
-	
-	@Override
-	public int update(BaseEntity entity) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-	
-	@Override
-	public int delete(BaseEntity entity) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-	
 	protected abstract String getTableName();
 }

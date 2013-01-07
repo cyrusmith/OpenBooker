@@ -14,6 +14,7 @@ import ru.interosite.openbooker.datamodel.domain.Currency;
 import ru.interosite.openbooker.datamodel.domain.EntitiesFactory;
 import ru.interosite.openbooker.datamodel.domain.Funds;
 import ru.interosite.openbooker.datamodel.domain.IMapper;
+import ru.interosite.openbooker.datamodel.mapper.DatabaseActionException;
 import ru.interosite.openbooker.datamodel.mapper.MapperRegistry;
 
 import com.xtremelabs.robolectric.Robolectric;
@@ -23,7 +24,7 @@ import com.xtremelabs.robolectric.RobolectricTestRunner;
 public class AccountMappers {
 	
 	@Test
-	public void findAccount() {
+	public void findAccount() throws DatabaseActionException {
 		
 		BaseEntity acc = EntitiesFactory.createAccount(AccountType.CASH, new Funds(100000, Currency.RUR));
 		assertThat(acc, instanceOf(Account.class));
