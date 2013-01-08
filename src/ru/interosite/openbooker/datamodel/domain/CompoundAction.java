@@ -9,12 +9,6 @@ import ru.interosite.openbooker.datamodel.mapper.MapperRegistry;
 
 public class CompoundAction {
 	
-	public static interface ICompoundActionListener {
-		public void onBegin();
-		public void onSuccessful();
-		public void onEnd();
-	}
-	
 	private static ThreadLocal<CompoundAction> mAction = new ThreadLocal<CompoundAction>() {
 		protected CompoundAction initialValue() {
 			return new CompoundAction();
@@ -25,36 +19,20 @@ public class CompoundAction {
 		mAction.set(new CompoundAction());
 	}
 	
-	public static void open(ICompoundActionListener listener) {
-		if(listener==null) {
-			throw new IllegalArgumentException("ICompoundActionListener is null");
-		}
-		mAction.set(new CompoundAction(listener));
-	}
-	
 	public static CompoundAction getCurrentAction() {
 		return mAction.get();
 	}
 	
 	public static boolean execute() {
-		CompoundAction action = mAction.get();
-		action.executeTransaction();
-		return true;
+		return mAction.get().executeTransaction();
 	}
-		
-	private ICompoundActionListener mTransactionListener = null;
 	
 	private List<BaseEntity> mNewEntities = new ArrayList<BaseEntity>();
 	private List<BaseEntity> mDirtyEntities = new ArrayList<BaseEntity>();
 	private List<BaseEntity> mRemoveEntities = new ArrayList<BaseEntity>();
 	
 	private CompoundAction() {
-		this(null);
-	}
-	
-	private CompoundAction(ICompoundActionListener listener) {
-		mTransactionListener = listener;
-	}
+	}	
 	
 	public void addNew(BaseEntity entity) {
 		
@@ -98,22 +76,20 @@ public class CompoundAction {
 		return true;
 	}
 	
-	private void executeTransaction() {
+	private boolean executeTransaction() {
 		try {
-			fireTransactionBegin();
+			MapperRegistry.getInstance().transactionBegin();
 			doInserts();
 			doUpdates();
 			doDeletes();
-			fireTransactionSuccessful();
-		}
-		catch(DatabaseActionException e) {
-			
+			MapperRegistry.getInstance().transactionSuccessful();
+			return true;
 		}
 		catch(Exception e) {
-			
+			return false;
 		}
 		finally {
-			fireTransactionEnd();
+			MapperRegistry.getInstance().transactionEnd();
 		}		
 	}
 	
@@ -125,31 +101,14 @@ public class CompoundAction {
 	
 	private void doUpdates() throws DatabaseActionException {
 		for(BaseEntity entity : mDirtyEntities) {
-			//TODO
+			MapperRegistry.getInstance().get(entity.getClass()).update(entity);
 		}
 	}
 	
 	private void doDeletes() throws DatabaseActionException {
 		for(BaseEntity entity : mRemoveEntities) {
-			//TODO
+			MapperRegistry.getInstance().get(entity.getClass()).delete(entity);
 		}
 	}
 	
-	private void fireTransactionBegin() {
-		if(mTransactionListener!=null) {
-			mTransactionListener.onBegin();
-		}
-	}
-	
-	private void fireTransactionSuccessful() {
-		if(mTransactionListener!=null) {
-			mTransactionListener.onSuccessful();
-		}
-	}
-	
-	private void fireTransactionEnd() {
-		if(mTransactionListener!=null) {
-			mTransactionListener.onEnd();
-		}
-	}
 }

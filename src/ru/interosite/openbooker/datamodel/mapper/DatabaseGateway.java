@@ -6,7 +6,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class DatabaseGateway implements CompoundAction.ICompoundActionListener {
+class DatabaseGateway implements ITransactionalDatabase {
 	
 	private static final String DATABASE_NAME = "open_booker_db";
 
@@ -38,33 +38,39 @@ public class DatabaseGateway implements CompoundAction.ICompoundActionListener {
 				// TODO Auto-generated method stub
 				
 			}
+			
 		};
+		return this;
+	}
+	
+	public DatabaseGateway init(SQLiteOpenHelper customOpener) {
+		//Useful for testing
+		mDbOpener = customOpener;
 		return this;
 	}
 	
 	public SQLiteOpenHelper getDatabaseOpener() {
 		return mDbOpener;
 	}
-
+	
 	@Override
-	public void onBegin() {
+	public void transactionBegin() {
 		if(mDbOpener!=null) {
 			mDbOpener.getWritableDatabase().beginTransaction();
 		}
 	}
-
+	
 	@Override
-	public void onSuccessful() {
-		if(mDbOpener!=null) {
-			mDbOpener.getWritableDatabase().setTransactionSuccessful();
-		}
-	}
-
-	@Override
-	public void onEnd() {
+	public void transactionEnd() {
 		if(mDbOpener!=null) {
 			mDbOpener.getWritableDatabase().endTransaction();
 		}
 	}
 	
+	@Override
+	public void transactionSuccessful() {
+		if(mDbOpener!=null) {
+			mDbOpener.getWritableDatabase().setTransactionSuccessful();
+		}
+	}
 }

@@ -13,7 +13,7 @@ class AccountMapper extends BaseMapper {
 
 	@Override
 	public int insert(BaseEntity entity) throws DatabaseActionException {
-		// TODO Auto-generated method stub
+		
 		return 0;
 	}
 

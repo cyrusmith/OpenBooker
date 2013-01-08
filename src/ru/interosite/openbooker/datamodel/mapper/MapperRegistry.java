@@ -57,4 +57,21 @@ public class MapperRegistry {
 		}
 		return mapper;
 	}
+	
+	public void transactionBegin() {
+		getTransactionalDatabase().transactionBegin();
+	}
+	
+	public void transactionSuccessful() {
+		getTransactionalDatabase().transactionSuccessful();
+	}
+	
+	public void transactionEnd() {
+		getTransactionalDatabase().transactionEnd();
+	}
+	
+	protected ITransactionalDatabase getTransactionalDatabase() {
+		return DatabaseGateway.getInstance();
+	}
+	
 }

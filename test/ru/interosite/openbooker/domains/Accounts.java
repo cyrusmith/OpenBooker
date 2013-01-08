@@ -73,10 +73,13 @@ public class Accounts {
 	
 	@Test
 	public void createPersistent() {
-		DatabaseGateway gateway = DatabaseGateway.getInstance().init(Robolectric.application.getApplicationContext());
-		CompoundAction.open(gateway);		
+		DatamodelContext.getInstance().setExternalContext(Robolectric.application.getApplicationContext());
+		CompoundAction.open();		
 		Account acc = EntitiesFactory.createAccount(AccountType.CASH, new Funds(100000, Currency.RUR));		
 		CompoundAction.execute();
+		//OR
+		Account acc = DatamodelContext.getInstance().getMapperRegistry().get(Account.class).findByType(id);
+		
 	}
 	
 }
