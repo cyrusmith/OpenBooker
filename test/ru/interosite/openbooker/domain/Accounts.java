@@ -27,24 +27,12 @@ import com.xtremelabs.robolectric.RobolectricTestRunner;
 public class Accounts {
 	
 	@Test
-	public void createAccount() {
-		//Params: 
-		long accTypeId = 1; 
-		String title = "Wallet";
-		Funds initialFunds = new Funds(100000, Currency.RUR); 
-				
-		GatewayRegistry gateways = GatewayRegistry.create(Robolectric.application.getApplicationContext());
-		EntitiesRegistry registry = EntitiesRegistry.create(gateways);
+	public void findsAccounts() {		
 		
-		AccountType accType = (AccountType)registry.get(AccountType.class, accTypeId);
-		
-		Account acc = EntitiesFactory.createAccount(accType, title, initialFunds);
-				
+		DbAccess dba = new DBAccess(Robolectric.application.getApplicationContext());
+		GatewayRegistry gateways = GatewayRegistry.createRegistry(dba);
 		DatabaseGateway accountGateway = gateways.get(Account.class);
-		assertThat(accountGateway, notNullValue());
-		
-		int newAccId = accountGateway.insert(acc);
-		assertTrue(newAccId > 0);
+		Cursor c = accountGateway.findAll();
 		
 	}
 	
@@ -55,24 +43,33 @@ public class Accounts {
 		long accId = 1;
 		Funds funds = new Funds(3306000, Currency.RUR);
 		long incomeSourceId = 2; 
+						
+		DbAccess dba = new DBAccess(Robolectric.application.getApplicationContext());
 		
-		GatewayRegistry gateways = GatewayRegistry.create(Robolectric.application.getApplicationContext());	
-		EntitiesRegistry registry = EntitiesRegistry.create(gateways);
+		GatewayRegistry gateways = GatewayRegistry.createRegistry(dba);	
+		EntitiesRegistry entities = EntitiesRegistry.createRegistry(dba);
 		
-		Account account = (Account)registry.get(Account.class, accId);
-		IncomeSource source = (IncomeSource)registry.get(IncomeSource.class, incomeSourceId);
+		Account account = (Account)entities.get(Account.class, accId);
+		IncomeSource source = (IncomeSource)entities.findById(IncomeSource.class, incomeSourceId);
 		
-		Operation operation = EntitiesRegistry.createRefillOperation(account, source, funds);
+		Operation operation = EntitiesFactory.createRefillOperation(account, source, funds);
 		
 		account.addFunds(funds);
 		
 		DatabaseGateway accountGateway = gateways.get(Account.class);
-		DatabaseGateway operationGateway = gateways.get(OperationRefill.class);
+		DatabaseGateway operationGateway = gateways.get(OperationRefill.class);		
 		
-		
-		int numUpdated = accountGateway.update(account);
-		int newInserted = operationGateway.insert(operation);
-		
+		SQLiteDatabase db = dba.getWritableDatabase();
+		try {
+			db.beginTransaction();
+			int numUpdated = accountGateway.update(account);
+			int newInserted = operationGateway.insert(operation);
+			db.setTransactionSuccessful();
+		}
+		finally {
+			db.endTransaction();
+		}
+								
 		assertTrue(numUpdated == 1);
 		assertTrue(newInserted  > 0);
 	}
