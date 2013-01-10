@@ -34,6 +34,7 @@ public class Accounts {
 		
 	}
 	
+	
 	@Test
 	public void accountServiceSetInitialBalance() {
 		Account cash = EntitiesFactory.createCashAccount();

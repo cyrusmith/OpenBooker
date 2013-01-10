@@ -1,11 +1,10 @@
 package ru.interosite.openbooker.datamodel.domain;
 
-public class Account {
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-	Account(AccountType type) {}
-	
-	void refill(Funds funds, IncomeSource source) {}	
-	
-	void debit(Funds funds, ExpenseType type) {}
-	
+public class Account extends BaseEntity {
+
 }

@@ -45,5 +45,10 @@ public class Funds {
 		
 		return new Funds(convertedValue, toCurrency);
 		
-	}	
+	}
+	
+	public Funds reverse() {
+		return new Funds(-getValue(), getCurrency());
+	}
+	
 }
