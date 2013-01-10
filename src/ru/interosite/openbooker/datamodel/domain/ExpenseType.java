@@ -1,6 +1,8 @@
 package ru.interosite.openbooker.datamodel.domain;
 
-public class ExpenseType {
+import java.util.Map;
+
+public class ExpenseType extends BaseEntity {
 
 	private String mTitle = null;
 
@@ -13,5 +15,11 @@ public class ExpenseType {
 	
 	public String getTitle() {
 		return mTitle;
+	}
+
+	@Override
+	public Map<String, String> getValuesMap() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

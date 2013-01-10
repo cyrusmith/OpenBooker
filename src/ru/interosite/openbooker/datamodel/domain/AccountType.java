@@ -5,6 +5,7 @@ package ru.interosite.openbooker.datamodel.domain;
  */
 public enum AccountType {
 
+	UNKNOWN(0),
 	CASH(1), 
 	CREDIT_CARD(2), 
 	DEBIT_CARD(3), 

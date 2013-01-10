@@ -1,6 +1,8 @@
 package ru.interosite.openbooker.datamodel.domain;
 
-public class IncomeSource {
+import java.util.Map;
+
+public class IncomeSource extends BaseEntity {
 	private String mTitle = null;
 	
 	public IncomeSource(String title) {
@@ -12,5 +14,11 @@ public class IncomeSource {
 	
 	public String getTitle() {
 		return mTitle;
+	}
+
+	@Override
+	public Map<String, String> getValuesMap() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

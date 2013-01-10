@@ -1,5 +1,7 @@
 package ru.interosite.openbooker.datamodel.domain;
 
+import java.util.Map;
+
 public class Operation extends BaseEntity {
 	
 	protected final Account mAccount;
@@ -13,6 +15,12 @@ public class Operation extends BaseEntity {
 	
 	public void execute() {
 		//TODO make dirty
+	}
+
+	@Override
+	public Map<String, String> getValuesMap() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

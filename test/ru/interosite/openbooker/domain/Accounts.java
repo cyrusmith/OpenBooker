@@ -1,11 +1,7 @@
 package ru.interosite.openbooker.domain;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.notNullValue;
-
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
@@ -19,10 +15,12 @@ import ru.interosite.openbooker.datamodel.domain.Currency;
 import ru.interosite.openbooker.datamodel.domain.EntitiesFactory;
 import ru.interosite.openbooker.datamodel.domain.Funds;
 import ru.interosite.openbooker.datamodel.domain.IncomeSource;
+import ru.interosite.openbooker.datamodel.domain.Operation;
+import ru.interosite.openbooker.datamodel.domain.OperationRefill;
 import ru.interosite.openbooker.datamodel.gateway.DatabaseGateway;
 import ru.interosite.openbooker.datamodel.gateway.GatewayRegistry;
-
-import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
@@ -30,14 +28,22 @@ import com.xtremelabs.robolectric.RobolectricTestRunner;
 @RunWith(RobolectricTestRunner.class)
 public class Accounts {
 	
-	@Test
-	public void findsAccounts() {		
-		
+	@Before
+	public void setUp() {
 		DBAccess dba = new DBAccess(Robolectric.application.getApplicationContext());
-		GatewayRegistry gateways = GatewayRegistry.createRegistry(dba);
+		Account acc = EntitiesFactory.createAccount(AccountType.CASH, new Funds(100000, Currency.RUR));
+		int newId = dba.getGatewayRegistry().get(Account.class).insert(acc);
+		assertTrue(newId > 0);
+		dba.close();
+	}
+	
+	@Test
+	public void findsAccounts() {				
+		DBAccess dba = new DBAccess(Robolectric.application.getApplicationContext());
+		GatewayRegistry gateways = dba.getGatewayRegistry();
 		DatabaseGateway accountGateway = gateways.get(Account.class);
-		Cursor c = accountGateway.findAll();
-		
+		Cursor c = accountGateway.findAll(null, null);
+		assertThat(c, notNullValue());
 	}
 	
 	@Test
@@ -58,7 +64,7 @@ public class Accounts {
 		Account account = (Account)accountGateway.findById(accId);
 		IncomeSource source = (IncomeSource)gateways.get(IncomeSource.class).findById(incomeSourceId);
 		
-		Operation operation = EntitiesFactory.createRefillOperation(account, source, funds);
+		Operation operation = EntitiesFactory.createRefillOperation(account, funds);
 		
 		account.addFunds(funds);
 		
@@ -68,14 +74,16 @@ public class Accounts {
 			int numUpdated = accountGateway.update(account);
 			int newInserted = operationGateway.insert(operation);
 			db.setTransactionSuccessful();
+			assertTrue(numUpdated == 1);
+			assertTrue(newInserted  > 0);			
+		}
+		catch(Exception e) {
+			throw new AssertionError("Error during transaction");
 		}
 		finally {
 			db.endTransaction();
 		}
 								
-		assertTrue(numUpdated == 1);
-		assertTrue(newInserted  > 0);
-		
 		dba.close();
 	}
 	

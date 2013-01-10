@@ -2,7 +2,7 @@ package ru.interosite.openbooker.datamodel.domain;
 
 import java.util.Map;
 
-public class IncomeOperation extends BaseEntity {
+public class UnknownEntity extends BaseEntity {
 
 	@Override
 	public Map<String, String> getValuesMap() {

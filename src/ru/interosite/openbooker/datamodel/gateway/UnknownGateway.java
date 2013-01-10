@@ -4,22 +4,22 @@ import android.content.ContentValues;
 import ru.interosite.openbooker.datamodel.DBAccess;
 import ru.interosite.openbooker.datamodel.domain.BaseEntity;
 
-public class AccountGateway extends DatabaseGateway {
+public class UnknownGateway extends DatabaseGateway {
 
-	public static final String TABLE_NAME = "accounts";
-	
-	public AccountGateway(DBAccess dba) {
+	public UnknownGateway(DBAccess dba) {
 		super(dba);
 	}
 
 	@Override
 	protected String getTableName() {
-		return TABLE_NAME;
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	protected String[] getColumns() {
-		return new String[]{};
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

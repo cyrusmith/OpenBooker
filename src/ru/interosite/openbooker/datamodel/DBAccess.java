@@ -1,6 +1,7 @@
 package ru.interosite.openbooker.datamodel;
 
 import ru.interosite.openbooker.ApplicationConfig;
+import ru.interosite.openbooker.datamodel.gateway.AccountGateway;
 import ru.interosite.openbooker.datamodel.gateway.GatewayRegistry;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -8,8 +9,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
 public class DBAccess extends SQLiteOpenHelper {
-	
-	public static final String ACCOUNTS_TABLE_NAME = "accounts";
 	
 	private final GatewayRegistry mGatewayRegistry;
 	
@@ -21,7 +20,7 @@ public class DBAccess extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		String createAccountsSql = "CREATE TABLE "
-				+ ACCOUNTS_TABLE_NAME + " (" + 
+				+ AccountGateway.TABLE_NAME + " (" + 
 				BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 				"title REAL," + 
 				"type_id INTEGER);";

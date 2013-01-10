@@ -6,52 +6,65 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ru.interosite.openbooker.datamodel.DBAccess;
+import ru.interosite.openbooker.datamodel.domain.Account;
+import ru.interosite.openbooker.datamodel.domain.BaseEntity;
+import ru.interosite.openbooker.datamodel.domain.ExpenseType;
+import ru.interosite.openbooker.datamodel.domain.IncomeSource;
+import ru.interosite.openbooker.datamodel.domain.OperationDebit;
+import ru.interosite.openbooker.datamodel.domain.OperationRefill;
 
 public class GatewayRegistry {
 	
 	private final DBAccess mDba;
 	
-	private final Map<Class<?>, DatabaseGateway> mGateways = new HashMap<Class<?>, DatabaseGateway>();
+	private final static Map<Class<? extends BaseEntity>, Class<? extends DatabaseGateway>> mEntityGatewayMap = new HashMap<Class<? extends BaseEntity>, Class<? extends DatabaseGateway>>();
 		
-	public static final DatabaseGateway EMPTY_GATEWAY = new DatabaseGateway(null); 
-	
-	private void addDomainObjects() {
-		mGateways.put(AccountGateway.class, EMPTY_GATEWAY);
+	private static void fillEntityGatewayMap() {
+		mEntityGatewayMap.put(Account.class, AccountGateway.class);
+		mEntityGatewayMap.put(OperationRefill.class, AccountGateway.class);
+		mEntityGatewayMap.put(OperationDebit.class, AccountGateway.class);
+		mEntityGatewayMap.put(IncomeSource.class, AccountGateway.class);
+		mEntityGatewayMap.put(ExpenseType.class, AccountGateway.class);
 	}
+	
+	static {
+		fillEntityGatewayMap();
+	}
+	
+	private final Map<Class<? extends BaseEntity>, DatabaseGateway> mGateways = new HashMap<Class<? extends BaseEntity>, DatabaseGateway>();
 	
 	public GatewayRegistry(DBAccess dba) {
 		mDba = dba;
-		addDomainObjects();
+		for(Class<? extends BaseEntity> entityClass : mEntityGatewayMap.keySet()) {
+			mGateways.put(entityClass, DatabaseGateway.UNKNOWN_GATEWAY);
+		}
 	}
 		
-	public DatabaseGateway get(Class<DatabaseGateway> clazz) {
-		if(clazz==null) {
+	public DatabaseGateway get(Class<? extends BaseEntity> entityClass) {
+		if(entityClass==null) {
 			throw new IllegalArgumentException();
 		}
-		DatabaseGateway gateway = mGateways.get(clazz);
-		if(gateway==EMPTY_GATEWAY) {
+		
+		Class<? extends DatabaseGateway> gatewayClass = mEntityGatewayMap.get(entityClass);
+		
+		if(gatewayClass==null) {
+			throw new IllegalArgumentException("Class "  + entityClass.getName() + " has no gateway assinged");
+		}
+		
+		DatabaseGateway gateway = mGateways.get(entityClass);
+		if(gateway==DatabaseGateway.UNKNOWN_GATEWAY) {
 			Constructor<? extends DatabaseGateway> constr;
 			try {
-				constr = clazz.getDeclaredConstructor(DBAccess.class);
+				constr = gatewayClass.getDeclaredConstructor(DBAccess.class);
 				gateway = constr.newInstance(mDba);
-			} catch (NoSuchMethodException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InstantiationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}			
+				mGateways.put(entityClass, gateway);
+			} catch (Exception e) {
+				throw new RuntimeException("Cannot instantiate gateway class");
+			}
+	
 		}
-		return mGateways.get(clazz);
+		return gateway;
 	}
+
 	
 }

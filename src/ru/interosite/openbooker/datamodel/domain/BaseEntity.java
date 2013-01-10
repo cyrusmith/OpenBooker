@@ -1,8 +1,12 @@
 package ru.interosite.openbooker.datamodel.domain;
 
-public class BaseEntity {
+import java.util.Map;
+
+public abstract class BaseEntity {
 	
 	private Long mId = null;
+	
+	BaseEntity() {}
 	
 	public void setId(Long id) {
 		if(id==null) {
@@ -15,16 +19,10 @@ public class BaseEntity {
 		return mId;
 	}
 	
-	public void setNew() {
-			
+	public static boolean isUnknown(BaseEntity entity) {
+		return entity instanceof UnknownEntity;
 	}
 	
-	public void setDirty() {
+	public abstract Map<String, String> getValuesMap();
 	
-	}
-	
-	public void setRemove() {
-	
-	}
-		
 }
