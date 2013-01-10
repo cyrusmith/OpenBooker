@@ -12,14 +12,17 @@ public class UnknownGateway extends DatabaseGateway {
 
 	@Override
 	protected String getTableName() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	protected String[] getColumns() {
-		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
+	@Override
+	protected ContentValues getContentValues(BaseEntity entity) {
+		return null;
+	}
+	
 }

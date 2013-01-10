@@ -19,12 +19,7 @@ public class DBAccess extends SQLiteOpenHelper {
 	
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		String createAccountsSql = "CREATE TABLE "
-				+ AccountGateway.TABLE_NAME + " (" + 
-				BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-				"title REAL," + 
-				"type_id INTEGER);";
-		db.execSQL(createAccountsSql);
+		db.execSQL(AccountGateway.CREATE_TABLE_SQL);
 	}
 
 	@Override

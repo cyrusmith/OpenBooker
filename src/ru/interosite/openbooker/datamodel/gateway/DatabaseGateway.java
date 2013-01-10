@@ -31,13 +31,16 @@ public abstract class DatabaseGateway {
 	}
 		
 	public BaseEntity findById(long id) {
+		SQLiteDatabase db = mDba.getReadableDatabase();
+		//TODO
+		db.quer
 		return null;
 	}
 	
-	public int insert(BaseEntity entity) {
+	public long insert(BaseEntity entity) {
 		SQLiteDatabase db = mDba.getWritableDatabase();
-		db.insert(getTableName(), null, getContentValues(entity));
-		return 0;
+		long newId = db.insert(getTableName(), null, getContentValues(entity));
+		return newId;
 	}
 	
 	public int update(BaseEntity entity) {
@@ -48,18 +51,7 @@ public abstract class DatabaseGateway {
 		return 0;
 	}
 
-	protected ContentValues getContentValues(BaseEntity entity) {
-		if(entity==null) {
-			throw new IllegalArgumentException();
-		}
-		Map<String, String> entityValues = entity.getValuesMap();
-		ContentValues contentValues = new ContentValues(entityValues.size());
-		for(String key : entityValues.keySet()) {
-			contentValues.put(key, entityValues.get(key));
-		}
-		return contentValues;
-	}	
-	
+	protected abstract ContentValues getContentValues(BaseEntity entity) ;	
 	protected abstract String getTableName();
 	protected abstract String[] getColumns();
 	

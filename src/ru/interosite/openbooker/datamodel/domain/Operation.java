@@ -17,10 +17,4 @@ public class Operation extends BaseEntity {
 		//TODO make dirty
 	}
 
-	@Override
-	public Map<String, String> getValuesMap() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 }

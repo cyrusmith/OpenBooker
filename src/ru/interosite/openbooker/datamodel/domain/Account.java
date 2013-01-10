@@ -6,8 +6,10 @@ import java.util.Map;
 
 public class Account extends BaseEntity {
 	
-	private Map<Currency, Funds> mFunds = new HashMap<Currency, Funds>(); 
-	private AccountType mType = AccountType.UNKNOWN;
+	private Map<Currency, Funds> mFunds = new HashMap<Currency, Funds>();
+	
+	private String mTitle = null;
+	private AccountType mType = AccountType.UNKNOWN;		
 	
 	Account(AccountType type) {
 		if(type==null) {
@@ -23,14 +25,24 @@ public class Account extends BaseEntity {
 		mFunds.put(funds.getCurrency(), funds);
 	}
 	
+	public void setTitle(String title) {
+		mTitle = title;
+	}
+	
+	public String getTitle() {
+		return mTitle;
+	}
+	
+	public void setType(AccountType type) {
+		mType = type;
+	}
+	
+	public AccountType getType() {
+		return mType;
+	}
+	
 	public Map<Currency, Funds> getFunds() {
 		return mFunds;
-	}
-
-	@Override
-	public Map<String, String> getValuesMap() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 	
 }

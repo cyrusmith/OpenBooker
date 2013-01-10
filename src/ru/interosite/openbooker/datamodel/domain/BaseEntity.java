@@ -23,6 +23,4 @@ public abstract class BaseEntity {
 		return entity instanceof UnknownEntity;
 	}
 	
-	public abstract Map<String, String> getValuesMap();
-	
 }

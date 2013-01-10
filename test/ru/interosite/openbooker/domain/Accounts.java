@@ -28,12 +28,15 @@ import com.xtremelabs.robolectric.RobolectricTestRunner;
 @RunWith(RobolectricTestRunner.class)
 public class Accounts {
 	
+	private long mAccId = -1;
+	
 	@Before
 	public void setUp() {
 		DBAccess dba = new DBAccess(Robolectric.application.getApplicationContext());
 		Account acc = EntitiesFactory.createAccount(AccountType.CASH, new Funds(100000, Currency.RUR));
-		int newId = dba.getGatewayRegistry().get(Account.class).insert(acc);
-		assertTrue(newId > 0);
+		mAccId = dba.getGatewayRegistry().get(Account.class).insert(acc);
+		assertTrue(mAccId > 0);
+		assertTrue(mAccId == 1);
 		dba.close();
 	}
 	
@@ -50,7 +53,7 @@ public class Accounts {
 	public void refillAccount() {
 		
 		//Params
-		long accId = 1;
+		long accId = mAccId;
 		Funds funds = new Funds(3306000, Currency.RUR);
 		long incomeSourceId = 2; 
 						
@@ -72,7 +75,7 @@ public class Accounts {
 		try {
 			db.beginTransaction();
 			int numUpdated = accountGateway.update(account);
-			int newInserted = operationGateway.insert(operation);
+			long newInserted = operationGateway.insert(operation);
 			db.setTransactionSuccessful();
 			assertTrue(numUpdated == 1);
 			assertTrue(newInserted  > 0);			

@@ -15,10 +15,5 @@ public class IncomeSource extends BaseEntity {
 	public String getTitle() {
 		return mTitle;
 	}
-
-	@Override
-	public Map<String, String> getValuesMap() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 }

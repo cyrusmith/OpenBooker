@@ -16,4 +16,8 @@ public enum AccountType {
 	private AccountType(int code) {
 		mCode = code;
 	}
+	
+	public int getId() {
+		return mCode;
+	}
 }
