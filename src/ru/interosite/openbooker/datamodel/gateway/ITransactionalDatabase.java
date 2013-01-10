@@ -1,4 +1,4 @@
-package ru.interosite.openbooker.datamodel.mapper;
+package ru.interosite.openbooker.datamodel.gateway;
 
 public interface ITransactionalDatabase {
 	public void transactionBegin();

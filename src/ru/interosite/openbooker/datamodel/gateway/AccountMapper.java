@@ -1,4 +1,4 @@
-package ru.interosite.openbooker.datamodel.mapper;
+package ru.interosite.openbooker.datamodel.gateway;
 
 import ru.interosite.openbooker.datamodel.domain.Account;
 import ru.interosite.openbooker.datamodel.domain.BaseEntity;

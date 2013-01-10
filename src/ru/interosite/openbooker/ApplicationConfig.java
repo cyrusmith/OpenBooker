@@ -2,7 +2,9 @@ package ru.interosite.openbooker;
 
 import android.content.Context;
 
-public class ApplicationInfo {
+public class ApplicationConfig {
+	
+	public static final String DB_NAME = "openbooker";
 	
 	public static int getVersionCode(Context context) {
 		try {

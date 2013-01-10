@@ -12,11 +12,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ru.interosite.openbooker.datamodel.DBAccess;
 import ru.interosite.openbooker.datamodel.domain.Account;
 import ru.interosite.openbooker.datamodel.domain.AccountType;
 import ru.interosite.openbooker.datamodel.domain.Currency;
+import ru.interosite.openbooker.datamodel.domain.EntitiesFactory;
 import ru.interosite.openbooker.datamodel.domain.Funds;
 import ru.interosite.openbooker.datamodel.domain.IncomeSource;
+import ru.interosite.openbooker.datamodel.gateway.DatabaseGateway;
+import ru.interosite.openbooker.datamodel.gateway.GatewayRegistry;
 
 import android.content.ContentValues;
 
@@ -29,7 +33,7 @@ public class Accounts {
 	@Test
 	public void findsAccounts() {		
 		
-		DbAccess dba = new DBAccess(Robolectric.application.getApplicationContext());
+		DBAccess dba = new DBAccess(Robolectric.application.getApplicationContext());
 		GatewayRegistry gateways = GatewayRegistry.createRegistry(dba);
 		DatabaseGateway accountGateway = gateways.get(Account.class);
 		Cursor c = accountGateway.findAll();
@@ -44,20 +48,19 @@ public class Accounts {
 		Funds funds = new Funds(3306000, Currency.RUR);
 		long incomeSourceId = 2; 
 						
-		DbAccess dba = new DBAccess(Robolectric.application.getApplicationContext());
+		DBAccess dba = new DBAccess(Robolectric.application.getApplicationContext());
 		
-		GatewayRegistry gateways = GatewayRegistry.createRegistry(dba);	
-		EntitiesRegistry entities = EntitiesRegistry.createRegistry(dba);
-		
-		Account account = (Account)entities.get(Account.class, accId);
-		IncomeSource source = (IncomeSource)entities.findById(IncomeSource.class, incomeSourceId);
+		GatewayRegistry gateways = dba.getGatewayRegistry();			
+
+		DatabaseGateway accountGateway = gateways.get(Account.class);
+		DatabaseGateway operationGateway = gateways.get(OperationRefill.class);		
+
+		Account account = (Account)accountGateway.findById(accId);
+		IncomeSource source = (IncomeSource)gateways.get(IncomeSource.class).findById(incomeSourceId);
 		
 		Operation operation = EntitiesFactory.createRefillOperation(account, source, funds);
 		
 		account.addFunds(funds);
-		
-		DatabaseGateway accountGateway = gateways.get(Account.class);
-		DatabaseGateway operationGateway = gateways.get(OperationRefill.class);		
 		
 		SQLiteDatabase db = dba.getWritableDatabase();
 		try {
@@ -72,6 +75,8 @@ public class Accounts {
 								
 		assertTrue(numUpdated == 1);
 		assertTrue(newInserted  > 0);
+		
+		dba.close();
 	}
 	
 }
