@@ -1,12 +1,11 @@
 package ru.interosite.openbooker.datamodel.gateway;
 
-import java.util.Map;
-
 import ru.interosite.openbooker.datamodel.DBAccess;
 import ru.interosite.openbooker.datamodel.domain.BaseEntity;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.provider.BaseColumns;
 
 public abstract class DatabaseGateway {
 	
@@ -32,8 +31,21 @@ public abstract class DatabaseGateway {
 		
 	public BaseEntity findById(long id) {
 		SQLiteDatabase db = mDba.getReadableDatabase();
-		//TODO
-		db.quer
+		Cursor c = db.query(getTableName(), getColumns(), BaseColumns._ID + "=?", new String[]{String.valueOf(id)}, null, null, null);
+		if(c!=null) {
+			try {
+				if(c.getCount()==1) {
+					c.moveToFirst();
+				}
+				else {
+					throw new IllegalStateException("Cursor expected count is 1 but found " + c.getCount());
+				}			
+				return loadEntity(id, c);
+			}
+			finally {
+				c.close();
+			}
+		}
 		return null;
 	}
 	
@@ -54,5 +66,6 @@ public abstract class DatabaseGateway {
 	protected abstract ContentValues getContentValues(BaseEntity entity) ;	
 	protected abstract String getTableName();
 	protected abstract String[] getColumns();
+	protected abstract BaseEntity loadEntity(long id, Cursor c);
 	
 }

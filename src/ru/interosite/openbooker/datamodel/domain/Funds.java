@@ -1,7 +1,9 @@
 package ru.interosite.openbooker.datamodel.domain;
 
 public class Funds {
-
+	
+	public static final Funds EMPTY = new Funds(0, null);
+	
 	private final long mValue;
 	private final Currency mCurrency;
 	
