@@ -1,0 +1,6 @@
+CREATE TABLE accounts (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	title REAL,
+	type_id INTEGER
+);
+
