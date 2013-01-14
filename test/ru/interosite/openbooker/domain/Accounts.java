@@ -3,6 +3,7 @@ package ru.interosite.openbooker.domain;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Currency;
 
@@ -37,9 +38,9 @@ public class Accounts {
 	public void setUp() {
 		mDba = new DBAccess(Robolectric.application.getApplicationContext());
 		Account acc = EntitiesFactory.createAccount(AccountType.CASH, new Funds(100000, Currency.getInstance("RUR")));
+		acc.setTitle("Wallet");
 		mAccId = mDba.getGatewayRegistry().get(Account.class).insert(acc);
-		assertTrue(mAccId > 0);
-		assertTrue(mAccId == 1);
+		assertEquals(1, mAccId);
 	}
 	
 	@After
@@ -69,7 +70,10 @@ public class Accounts {
 		DatabaseGateway operationGateway = gateways.get(OperationRefill.class);		
 
 		Account account = (Account)accountGateway.findById(accId);
+		assertThat(account, notNullValue());
+		
 		IncomeSource source = (IncomeSource)gateways.get(IncomeSource.class).findById(incomeSourceId);
+		assertThat(source, notNullValue());
 		
 		Operation operation = EntitiesFactory.createRefillOperation(account, funds);
 		

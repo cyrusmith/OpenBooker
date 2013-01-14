@@ -51,13 +51,17 @@ public class AccountGateway extends DatabaseGateway {
 	
 	@Override
 	protected BaseEntity loadEntity(long id, Cursor c) {
-		int titleIndex = c.getColumnIndex(AccountsTableModel.TITLE);
-		int typeIdIndex = c.getColumnIndex(AccountsTableModel.TYPE_ID);
-		AccountType type = AccountType.valueOf(typeIdIndex);
-		//TODO load funds
+		String title = c.getString(c.getColumnIndex(AccountsTableModel.TITLE));
+		int typeId = c.getInt(c.getColumnIndex(AccountsTableModel.TYPE_ID));
+		AccountType type = AccountType.valueOf(typeId);
 		Account acc = EntitiesFactory.createAccount(type, Funds.EMPTY);
+		acc.setId(id);
+		acc.setTitle(title);
 		List<Funds> fundsList = loadFunds(id);
-		return null;
+		for(Funds funds : fundsList) {
+			acc.addFunds(funds);	
+		}		
+		return acc;
 	}
 	
 	protected List<Funds> loadFunds(long id) {

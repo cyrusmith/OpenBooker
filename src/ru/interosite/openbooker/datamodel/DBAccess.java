@@ -22,10 +22,10 @@ public class DBAccess extends SQLiteOpenHelper {
 	
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		String sql = "CREATE TABLE %s ";
+		String sql = "CREATE TABLE %s (%s)";
 		List<TableModel> tableModels = TableModel.getModels();
 		for(TableModel model : tableModels) {
-			
+			String tableName = model.getTableName();
 		}
 	}
 
