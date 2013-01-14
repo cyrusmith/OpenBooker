@@ -4,6 +4,9 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Currency;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,7 +14,6 @@ import org.junit.runner.RunWith;
 import ru.interosite.openbooker.datamodel.DBAccess;
 import ru.interosite.openbooker.datamodel.domain.Account;
 import ru.interosite.openbooker.datamodel.domain.AccountType;
-import ru.interosite.openbooker.datamodel.domain.Currency;
 import ru.interosite.openbooker.datamodel.domain.EntitiesFactory;
 import ru.interosite.openbooker.datamodel.domain.Funds;
 import ru.interosite.openbooker.datamodel.domain.IncomeSource;
@@ -29,21 +31,25 @@ import com.xtremelabs.robolectric.RobolectricTestRunner;
 public class Accounts {
 	
 	private long mAccId = -1;
+	private DBAccess mDba = null;
 	
 	@Before
 	public void setUp() {
-		DBAccess dba = new DBAccess(Robolectric.application.getApplicationContext());
-		Account acc = EntitiesFactory.createAccount(AccountType.CASH, new Funds(100000, Currency.RUR));
-		mAccId = dba.getGatewayRegistry().get(Account.class).insert(acc);
+		mDba = new DBAccess(Robolectric.application.getApplicationContext());
+		Account acc = EntitiesFactory.createAccount(AccountType.CASH, new Funds(100000, Currency.getInstance("RUR")));
+		mAccId = mDba.getGatewayRegistry().get(Account.class).insert(acc);
 		assertTrue(mAccId > 0);
 		assertTrue(mAccId == 1);
-		dba.close();
+	}
+	
+	@After
+	public void tearDown() {
+		mDba.close();
 	}
 	
 	@Test
 	public void findsAccounts() {				
-		DBAccess dba = new DBAccess(Robolectric.application.getApplicationContext());
-		GatewayRegistry gateways = dba.getGatewayRegistry();
+		GatewayRegistry gateways = mDba.getGatewayRegistry();
 		DatabaseGateway accountGateway = gateways.get(Account.class);
 		Cursor c = accountGateway.findAll(null, null);
 		assertThat(c, notNullValue());
@@ -54,12 +60,10 @@ public class Accounts {
 		
 		//Params
 		long accId = mAccId;
-		Funds funds = new Funds(3306000, Currency.RUR);
+		Funds funds = new Funds(3306000, Currency.getInstance("RUR"));
 		long incomeSourceId = 2; 
 						
-		DBAccess dba = new DBAccess(Robolectric.application.getApplicationContext());
-		
-		GatewayRegistry gateways = dba.getGatewayRegistry();			
+		GatewayRegistry gateways = mDba.getGatewayRegistry();			
 
 		DatabaseGateway accountGateway = gateways.get(Account.class);
 		DatabaseGateway operationGateway = gateways.get(OperationRefill.class);		
@@ -71,7 +75,7 @@ public class Accounts {
 		
 		account.addFunds(funds);
 		
-		SQLiteDatabase db = dba.getWritableDatabase();
+		SQLiteDatabase db = mDba.getWritableDatabase();
 		try {
 			db.beginTransaction();
 			int numUpdated = accountGateway.update(account);
@@ -87,7 +91,6 @@ public class Accounts {
 			db.endTransaction();
 		}
 								
-		dba.close();
 	}
 	
 }

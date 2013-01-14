@@ -1,8 +1,11 @@
 package ru.interosite.openbooker.datamodel;
 
+import java.util.List;
+
 import ru.interosite.openbooker.ApplicationConfig;
 import ru.interosite.openbooker.datamodel.gateway.AccountGateway;
 import ru.interosite.openbooker.datamodel.gateway.GatewayRegistry;
+import ru.interosite.openbooker.datamodel.tables.TableModel;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -19,7 +22,11 @@ public class DBAccess extends SQLiteOpenHelper {
 	
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		db.execSQL(AccountGateway.CREATE_TABLE_SQL);
+		String sql = "CREATE TABLE %s ";
+		List<TableModel> tableModels = TableModel.getModels();
+		for(TableModel model : tableModels) {
+			
+		}
 	}
 
 	@Override

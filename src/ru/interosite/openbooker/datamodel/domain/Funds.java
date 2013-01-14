@@ -1,5 +1,7 @@
 package ru.interosite.openbooker.datamodel.domain;
 
+import java.util.Currency;
+
 public class Funds {
 	
 	public static final Funds EMPTY = new Funds(0, null);
@@ -43,9 +45,7 @@ public class Funds {
 			return this;
 		}
 		
-		long convertedValue = Currency.convert(getValue(), getCurrency(), toCurrency);
-		
-		return new Funds(convertedValue, toCurrency);
+		return CurrencyConversionService.convert(this, toCurrency);
 		
 	}
 	

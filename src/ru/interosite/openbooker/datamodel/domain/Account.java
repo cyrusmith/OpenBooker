@@ -1,5 +1,6 @@
 package ru.interosite.openbooker.datamodel.domain;
 
+import java.util.Currency;
 import java.util.HashMap;
 import java.util.Map;
 

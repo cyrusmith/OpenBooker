@@ -1,27 +1,18 @@
 package ru.interosite.openbooker.gateway;
 
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ru.interosite.openbooker.datamodel.DBAccess;
 import ru.interosite.openbooker.datamodel.domain.Account;
-import ru.interosite.openbooker.datamodel.domain.Currency;
-import ru.interosite.openbooker.datamodel.domain.EntitiesFactory;
-import ru.interosite.openbooker.datamodel.domain.Funds;
 import ru.interosite.openbooker.datamodel.domain.IncomeSource;
-import ru.interosite.openbooker.datamodel.domain.Operation;
-import ru.interosite.openbooker.datamodel.domain.OperationRefill;
 import ru.interosite.openbooker.datamodel.gateway.AccountGateway;
 import ru.interosite.openbooker.datamodel.gateway.DatabaseGateway;
 import ru.interosite.openbooker.datamodel.gateway.GatewayRegistry;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;

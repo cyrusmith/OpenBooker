@@ -4,40 +4,34 @@ import java.util.ArrayList;
 import java.util.Currency;
 import java.util.List;
 
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.provider.BaseColumns;
 import ru.interosite.openbooker.datamodel.DBAccess;
 import ru.interosite.openbooker.datamodel.domain.Account;
 import ru.interosite.openbooker.datamodel.domain.AccountType;
 import ru.interosite.openbooker.datamodel.domain.BaseEntity;
 import ru.interosite.openbooker.datamodel.domain.EntitiesFactory;
 import ru.interosite.openbooker.datamodel.domain.Funds;
+import ru.interosite.openbooker.datamodel.tables.AccountBalanceTableModel;
+import ru.interosite.openbooker.datamodel.tables.AccountsTableModel;
+import ru.interosite.openbooker.datamodel.tables.TableModel;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 
 public class AccountGateway extends DatabaseGateway {
 
-	public static final String TABLE_NAME = "accounts";
-	public static final String TITLE = "title";
-	public static final String TYPE_ID = "type_id";
-	
-	public static final String CREATE_TABLE_SQL = "CREATE TABLE "
-			+ AccountGateway.TABLE_NAME + " (" + BaseColumns._ID
-			+ " INTEGER PRIMARY KEY AUTOINCREMENT, " 
-			+ "title REAL, "
-			+ "type_id INTEGER);";		
-	
 	public AccountGateway(DBAccess dba) {
 		super(dba);
 	}
 
 	@Override
 	protected String getTableName() {
-		return TABLE_NAME;
+		return TableModel.getModel(AccountsTableModel.class).getTableName();
 	}
 
 	@Override
 	protected String[] getColumns() {
-		return new String[]{TITLE, TYPE_ID};
+		return new String[]{AccountsTableModel.TITLE, AccountsTableModel.TYPE_ID};
 	}
 	
 	@Override
@@ -57,8 +51,8 @@ public class AccountGateway extends DatabaseGateway {
 	
 	@Override
 	protected BaseEntity loadEntity(long id, Cursor c) {
-		int titleIndex = c.getColumnIndex(TITLE);
-		int typeIdIndex = c.getColumnIndex(TYPE_ID);
+		int titleIndex = c.getColumnIndex(AccountsTableModel.TITLE);
+		int typeIdIndex = c.getColumnIndex(AccountsTableModel.TYPE_ID);
 		AccountType type = AccountType.valueOf(typeIdIndex);
 		//TODO load funds
 		Account acc = EntitiesFactory.createAccount(type, Funds.EMPTY);
@@ -68,8 +62,33 @@ public class AccountGateway extends DatabaseGateway {
 	
 	protected List<Funds> loadFunds(long id) {
 		List<Funds> funds = new ArrayList<Funds>();
-		//TODO load funds
-		Make db schema stupid!
+		SQLiteDatabase db = mDba.getReadableDatabase();
+		String balanceTableName = TableModel.getModel(AccountBalanceTableModel.class).getTableName();
+		String[] columns = new String[] {
+			AccountBalanceTableModel.CURRENCY_CODE,
+			AccountBalanceTableModel.VALUE
+		};
+		Cursor c = db.query(balanceTableName, columns, AccountBalanceTableModel.ACCOUNT_ID + "=?", new String[] {String.valueOf(id)}, AccountBalanceTableModel.CURRENCY_CODE, null, null);
+		if(c!=null && c.getCount() > 0) {
+			while(c.moveToNext()) {
+				String currencyCode = c.getString(c.getColumnIndex(AccountBalanceTableModel.CURRENCY_CODE));
+				if(TextUtils.isEmpty(currencyCode)) {
+					throw new RuntimeException("Currency code is empty in AccountBalance table");
+				}
+				
+				Currency currency = null;
+				try {
+					currency = Currency.getInstance(currencyCode);
+				}
+				catch(IllegalArgumentException e) {
+					throw new RuntimeException("Currency code is invalid (" + currencyCode + ")");
+				}
+				
+				long value = c.getLong(c.getColumnIndex(AccountBalanceTableModel.VALUE));								
+				funds.add(new Funds(value, currency));				
+			}
+		}
+		
 		return funds;
 	}
 	

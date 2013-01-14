@@ -2,6 +2,7 @@ package ru.interosite.openbooker.datamodel.tables;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,10 @@ public class TableModel {
 			throw new IllegalArgumentException("Not model info for " + modelClass + " found");	
 		}
 		return model;
+	}
+	
+	public static List<TableModel> getModels() {
+		return Collections.unmodifiableList(new ArrayList<TableModel>(mModels.values()));
 	}
 	
 	private String mCompoundKeyString = null;
