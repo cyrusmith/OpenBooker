@@ -8,11 +8,11 @@ public class OperationArguments extends TableModel {
 	public static final String VALUE = "value";
 	
 	OperationArguments() {
-		mTableName = "OperationArguments";
+		setTableName("OperationArguments");
 		
-		mNameTypeMap.put(OPERATION_ID, "INTEGER NOT NULL");
-		mNameTypeMap.put(NAME, "TEXT NOT NULL");
-		mNameTypeMap.put(VALUE, "TEXT NOT NULL");
+		addColumn(OPERATION_ID, "INTEGER NOT NULL");
+		addColumn(NAME, "TEXT NOT NULL");
+		addColumn(VALUE, "TEXT NOT NULL");
 		
 	}
 

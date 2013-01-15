@@ -6,8 +6,8 @@ public class CurrencyTableModel extends TableModel {
 	public static final String DESCRIPTION = "description";
 	
 	CurrencyTableModel() {
-		mTableName = "Currencies";		
-		mNameTypeMap.put(CODE, "TEXT NOT NULL");		
+		setTableName("Currencies");		
+		addColumn(CODE, "TEXT NOT NULL");		
 		setCompoundKey(CODE);
 	}
 }

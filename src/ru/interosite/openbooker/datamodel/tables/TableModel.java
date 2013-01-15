@@ -17,10 +17,11 @@ public class TableModel {
 		mModels.put(AccountBalanceTableModel.class, new AccountBalanceTableModel());
 		mModels.put(AccountsTableModel.class, new AccountsTableModel());
 		mModels.put(AccountTypeTableModel.class, new AccountTypeTableModel());
-		mModels.put(Operation.class, new Operation());
+		mModels.put(OperationTableModel.class, new OperationTableModel());
 		mModels.put(OperationArguments.class, new OperationArguments());
 		mModels.put(OperationFactTableModel.class, new OperationFactTableModel());
 		mModels.put(OperationTypes.class, new OperationTypes());
+		mModels.put(IncomeSourceTableModel.class, new IncomeSourceTableModel());
 	}
 	
 	public static TableModel getModel(Class<? extends TableModel> modelClass) {
@@ -35,23 +36,37 @@ public class TableModel {
 		return Collections.unmodifiableList(new ArrayList<TableModel>(mModels.values()));
 	}
 	
+	private String mTableName = null;		
 	private String mCompoundKeyString = null;
+	private Map<String, Column> mColumns = new HashMap<String, Column>();
 	
-	protected String mTableName = null;	
-	protected List<String> mColumns = new ArrayList<String>();
-	protected Map<String, String> mNameTypeMap = new HashMap<String, String>();	
 	protected List<String> mInsertsOnCreate = new ArrayList<String>();		
 	
 	TableModel() {
-		mNameTypeMap.put(ID, "INTEGER PRIMARY KEY AUTOINCREMENT");
+		addColumn(ID, "INTEGER PRIMARY KEY AUTOINCREMENT");
+	}
+	
+	protected final void setTableName(String name) {
+		mTableName = name;
+	}
+	
+	protected final void addColumn(String name, String typeDef) {
+		if(!mColumns.containsKey(name)) {
+			mColumns.put(name, new Column(name, typeDef));
+		}
+	}
+	
+	protected final void removeColumn(String name) {
+		mColumns.remove(name);
 	}
 	
 	protected final void setCompoundKey(String...cols) {
+		
 		if(cols.length == 0) {
 			return;
 		}
 		
-		mNameTypeMap.remove(ID);
+		removeColumn(ID);
 		List<String> colsList = new ArrayList<String>(Arrays.asList(cols));
 		StringBuilder sb = new StringBuilder();
 		sb.append("PRIMARY KEY (");
@@ -76,24 +91,20 @@ public class TableModel {
 		return mTableName;
 	}
 	
-	public final List<String> getColumns() {
-		return Collections.unmodifiableList(mColumns);
+	public final List<Column> getColumns() {
+		return new ArrayList<Column>(mColumns.values());
 	}
 	
 	public final String getTypeFor(String colName) {
-		String typeInfo = mNameTypeMap.get(colName);
-		if(typeInfo==null) {
+		Column col = mColumns.get(colName);
+		if(col==null) {
 			throw new IllegalArgumentException("Not type info for " + colName + " found");
 		}
-		return typeInfo;
+		return col.getType();
 	}
 	
 	public final List<String> getInsertsOnCreate() {
 		return mInsertsOnCreate;
-	}
-	
-	public final String getCreateColumnsString() {
-		
 	}
 	
 	public static final class Column {

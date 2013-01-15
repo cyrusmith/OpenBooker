@@ -1,6 +1,7 @@
 package ru.interosite.openbooker.domain;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
@@ -15,6 +16,7 @@ import org.junit.runner.RunWith;
 import ru.interosite.openbooker.datamodel.DBAccess;
 import ru.interosite.openbooker.datamodel.domain.Account;
 import ru.interosite.openbooker.datamodel.domain.AccountType;
+import ru.interosite.openbooker.datamodel.domain.BaseEntity;
 import ru.interosite.openbooker.datamodel.domain.EntitiesFactory;
 import ru.interosite.openbooker.datamodel.domain.Funds;
 import ru.interosite.openbooker.datamodel.domain.IncomeSource;
@@ -32,15 +34,27 @@ import com.xtremelabs.robolectric.RobolectricTestRunner;
 public class Accounts {
 	
 	private long mAccId = -1;
+	private long mIncomeId = -1;
 	private DBAccess mDba = null;
 	
-	@Before
-	public void setUp() {
-		mDba = new DBAccess(Robolectric.application.getApplicationContext());
+	private void createSomeData() {
 		Account acc = EntitiesFactory.createAccount(AccountType.CASH, new Funds(100000, Currency.getInstance("RUR")));
 		acc.setTitle("Wallet");
 		mAccId = mDba.getGatewayRegistry().get(Account.class).insert(acc);
 		assertEquals(1, mAccId);
+		
+		IncomeSource source = EntitiesFactory.createIncomeSource("Salary");
+		
+		mIncomeId = mDba.getGatewayRegistry().get(IncomeSource.class).insert(source);
+		assertEquals(1, mIncomeId);
+		
+	}
+	
+	@Before
+	public void setUp() {
+		System.setProperty("robolectric.logging", "stdout");	
+		mDba = new DBAccess(Robolectric.application.getApplicationContext());
+		createSomeData();
 	}
 	
 	@After
@@ -62,15 +76,19 @@ public class Accounts {
 		//Params
 		long accId = mAccId;
 		Funds funds = new Funds(3306000, Currency.getInstance("RUR"));
-		long incomeSourceId = 2; 
+		long incomeSourceId = mIncomeId; 
 						
 		GatewayRegistry gateways = mDba.getGatewayRegistry();			
 
 		DatabaseGateway accountGateway = gateways.get(Account.class);
 		DatabaseGateway operationGateway = gateways.get(OperationRefill.class);		
 
-		Account account = (Account)accountGateway.findById(accId);
-		assertThat(account, notNullValue());
+		BaseEntity accEntity = accountGateway.findById(accId);
+		assertThat(accEntity, notNullValue());
+		assertThat(accEntity, instanceOf(Account.class));
+		assertTrue(!BaseEntity.isUnknown(accEntity));
+		
+		Account account = (Account)accEntity;
 		
 		IncomeSource source = (IncomeSource)gateways.get(IncomeSource.class).findById(incomeSourceId);
 		assertThat(source, notNullValue());

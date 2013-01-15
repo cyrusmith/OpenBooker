@@ -6,10 +6,10 @@ public class AccountsTableModel extends TableModel {
 	public static final String TYPE_ID = "type_id";
 	
 	AccountsTableModel() {
-		mTableName = "Accounts";
+		setTableName("Accounts");
 		
-		mNameTypeMap.put(TITLE, "TEXT NOT NULL");
-		mNameTypeMap.put(TYPE_ID, "INTEGER NOT NULL");
+		addColumn(TITLE, "TEXT NOT NULL");
+		addColumn(TYPE_ID, "INTEGER NOT NULL");
 	}
 	
 }

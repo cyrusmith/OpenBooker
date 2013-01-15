@@ -2,29 +2,33 @@ package ru.interosite.openbooker.datamodel.gateway;
 
 import ru.interosite.openbooker.datamodel.DBAccess;
 import ru.interosite.openbooker.datamodel.domain.BaseEntity;
+import ru.interosite.openbooker.datamodel.tables.IncomeSourceTableModel;
+import ru.interosite.openbooker.datamodel.tables.OperationTableModel;
 import ru.interosite.openbooker.datamodel.tables.TableModel;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-public class UnknownGateway extends DatabaseGateway {
+public class OperationDebitGateway extends DatabaseGateway {
 
-	public UnknownGateway(DBAccess dba) {
+	public OperationDebitGateway(DBAccess dba) {
 		super(dba);
 	}
 
 	@Override
 	protected ContentValues getContentValues(BaseEntity entity) {
+		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
 	protected BaseEntity loadEntity(long id, Cursor c) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	protected TableModel getTableModel() {
-		return null;
-	}	
+		return TableModel.getModel(OperationTableModel.class);
+	}
 	
 }

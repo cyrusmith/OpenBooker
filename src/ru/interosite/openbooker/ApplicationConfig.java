@@ -5,10 +5,30 @@ import android.content.Context;
 public class ApplicationConfig {
 	
 	public static final String DB_NAME = "openbooker";
+	private static final ApplicationConfig mInstance = new ApplicationConfig();
 	
-	public static int getVersionCode(Context context) {
+	private volatile Context mContext = null;
+	
+	public static final ApplicationConfig getInstance() {
+		return mInstance;
+	}
+	
+	public void init(Context context) {
+		if(context==null) {
+			throw new IllegalArgumentException("Context is null");
+		}
+		if(mContext==null) {
+			synchronized (this) {
+				if(mContext==null) {
+					mContext = context;
+				}
+			}
+		}
+	}
+	
+	public int getVersionCode() {
 		try {
-			return context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
+			return mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionCode;
 		}
 		catch(Exception e) {
 			throw new RuntimeException("Cannot read version code: " + e.getMessage());

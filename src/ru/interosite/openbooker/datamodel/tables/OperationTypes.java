@@ -5,9 +5,9 @@ public class OperationTypes extends TableModel {
 	public static final String NAME = "name";
 	
 	OperationTypes() {
-		mTableName = "OperationTypes";
+		setTableName("OperationTypes");
 		
-		mNameTypeMap.put(NAME, "TEXT NOT NULL");		
+		addColumn(NAME, "TEXT NOT NULL");		
 	}
 
 }

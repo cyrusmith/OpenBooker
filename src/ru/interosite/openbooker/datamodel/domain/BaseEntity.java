@@ -1,8 +1,8 @@
 package ru.interosite.openbooker.datamodel.domain;
 
-import java.util.Map;
-
 public abstract class BaseEntity {
+	
+	public static final BaseEntity UNKNOWN = new UnknownEntity();
 	
 	private Long mId = null;
 	

@@ -9,13 +9,13 @@ public class OperationFactTableModel extends TableModel {
 	public static final String VALUE = "value";
 	
 	OperationFactTableModel() {
-		mTableName = "OperationFacts";
+		setTableName("OperationFacts");
 		
-		mNameTypeMap.put(CURRENCY_CODE, "TEXT NOT NULL");
-		mNameTypeMap.put(OPERATION_ID, "INTEGER NOT NULL");
-		mNameTypeMap.put(OPERATION_TYPE_ID, "INTEGER NOT NULL");
-		mNameTypeMap.put(CATEGORY_ID, "INTEGER NOT NULL");
-		mNameTypeMap.put(VALUE, "INTEGER NOT NULL");
+		addColumn(CURRENCY_CODE, "TEXT NOT NULL");
+		addColumn(OPERATION_ID, "INTEGER NOT NULL");
+		addColumn(OPERATION_TYPE_ID, "INTEGER NOT NULL");
+		addColumn(CATEGORY_ID, "INTEGER NOT NULL");
+		addColumn(VALUE, "INTEGER NOT NULL");
 		
 		setCompoundKey(CURRENCY_CODE, OPERATION_ID, OPERATION_TYPE_ID, CATEGORY_ID);
 	}

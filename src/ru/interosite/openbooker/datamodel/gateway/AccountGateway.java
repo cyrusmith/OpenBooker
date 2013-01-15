@@ -25,16 +25,6 @@ public class AccountGateway extends DatabaseGateway {
 	}
 
 	@Override
-	protected String getTableName() {
-		return TableModel.getModel(AccountsTableModel.class).getTableName();
-	}
-
-	@Override
-	protected String[] getColumns() {
-		return new String[]{AccountsTableModel.TITLE, AccountsTableModel.TYPE_ID};
-	}
-	
-	@Override
 	protected ContentValues getContentValues(BaseEntity entity) {
 		if(!(entity instanceof Account)) {
 			throw new IllegalArgumentException();
@@ -43,8 +33,8 @@ public class AccountGateway extends DatabaseGateway {
 		Account acc = (Account)entity;
 		
 		ContentValues values = new ContentValues();
-		values.put("title", acc.getTitle());
-		values.put("type_id", acc.getType().getId());
+		values.put(AccountsTableModel.TITLE, acc.getTitle());
+		values.put(AccountsTableModel.TYPE_ID, acc.getType().getId());
 		
 		return values;
 	}
@@ -94,6 +84,11 @@ public class AccountGateway extends DatabaseGateway {
 		}
 		
 		return funds;
+	}
+
+	@Override
+	protected TableModel getTableModel() {
+		return TableModel.getModel(AccountsTableModel.class);
 	}
 	
 }

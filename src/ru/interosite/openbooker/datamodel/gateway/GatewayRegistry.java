@@ -21,10 +21,11 @@ public class GatewayRegistry {
 		
 	private static void fillEntityGatewayMap() {
 		mEntityGatewayMap.put(Account.class, AccountGateway.class);
-		mEntityGatewayMap.put(OperationRefill.class, AccountGateway.class);
-		mEntityGatewayMap.put(OperationDebit.class, AccountGateway.class);
-		mEntityGatewayMap.put(IncomeSource.class, AccountGateway.class);
-		mEntityGatewayMap.put(ExpenseType.class, AccountGateway.class);
+		
+		mEntityGatewayMap.put(OperationRefill.class, OperationRefillGateway.class);
+		mEntityGatewayMap.put(OperationDebit.class, OperationDebitGateway.class);
+		mEntityGatewayMap.put(IncomeSource.class, IncomeSourceGateway.class);
+		mEntityGatewayMap.put(ExpenseType.class, ExpenseTypeGateway.class);
 	}
 	
 	static {

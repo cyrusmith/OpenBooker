@@ -8,9 +8,9 @@ public class AccountTypeTableModel extends TableModel {
 	public static final String NAME = "name";
 	
 	AccountTypeTableModel() {
-		mTableName = "AccountTypes";
+		setTableName("AccountTypes");
 
-		mNameTypeMap.put(NAME, "TEXT NOT NULL");
+		addColumn(NAME, "TEXT NOT NULL");
 		
 		String format = "INSERT INTO %s ('id', 'title') VALUES (%s, \"%s\")";
 		
