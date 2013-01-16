@@ -10,6 +10,7 @@ import ru.interosite.openbooker.datamodel.domain.Account;
 import ru.interosite.openbooker.datamodel.domain.BaseEntity;
 import ru.interosite.openbooker.datamodel.domain.ExpenseType;
 import ru.interosite.openbooker.datamodel.domain.IncomeSource;
+import ru.interosite.openbooker.datamodel.domain.Operation;
 import ru.interosite.openbooker.datamodel.domain.OperationDebit;
 import ru.interosite.openbooker.datamodel.domain.OperationRefill;
 
@@ -21,9 +22,7 @@ public class GatewayRegistry {
 		
 	private static void fillEntityGatewayMap() {
 		mEntityGatewayMap.put(Account.class, AccountGateway.class);
-		
-		mEntityGatewayMap.put(OperationRefill.class, OperationRefillGateway.class);
-		mEntityGatewayMap.put(OperationDebit.class, OperationDebitGateway.class);
+		mEntityGatewayMap.put(Operation.class, OperationGateway.class);
 		mEntityGatewayMap.put(IncomeSource.class, IncomeSourceGateway.class);
 		mEntityGatewayMap.put(ExpenseType.class, ExpenseTypeGateway.class);
 	}

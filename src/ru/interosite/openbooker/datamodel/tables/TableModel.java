@@ -18,9 +18,7 @@ public class TableModel {
 		mModels.put(AccountsTableModel.class, new AccountsTableModel());
 		mModels.put(AccountTypeTableModel.class, new AccountTypeTableModel());
 		mModels.put(OperationTableModel.class, new OperationTableModel());
-		mModels.put(OperationArguments.class, new OperationArguments());
 		mModels.put(OperationFactTableModel.class, new OperationFactTableModel());
-		mModels.put(OperationTypes.class, new OperationTypes());
 		mModels.put(IncomeSourceTableModel.class, new IncomeSourceTableModel());
 	}
 	

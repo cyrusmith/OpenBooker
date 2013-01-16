@@ -7,14 +7,14 @@ import ru.interosite.openbooker.datamodel.tables.TableModel;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-public class OperationRefillGateway extends DatabaseGateway {
+public class OperationGateway extends DatabaseGateway {
 
-	public OperationRefillGateway(DBAccess dba) {
+	public OperationGateway(DBAccess dba) {
 		super(dba);
 	}
 
 	@Override
-	protected ContentValues getContentValues(BaseEntity entity) {
+	protected ContentValues doGetContentValues(BaseEntity entity) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -28,6 +28,6 @@ public class OperationRefillGateway extends DatabaseGateway {
 	@Override
 	protected TableModel getTableModel() {
 		return TableModel.getModel(OperationTableModel.class);
-	}	
+	}
 	
 }

@@ -2,6 +2,7 @@ package ru.interosite.openbooker.datamodel.gateway;
 
 import java.util.List;
 
+import ru.interosite.openbooker.ApplicationConfig;
 import ru.interosite.openbooker.datamodel.DBAccess;
 import ru.interosite.openbooker.datamodel.domain.Account;
 import ru.interosite.openbooker.datamodel.domain.AccountType;
@@ -22,7 +23,7 @@ public class IncomeSourceGateway extends DatabaseGateway {
 	}
 
 	@Override
-	protected ContentValues getContentValues(BaseEntity entity) {
+	protected ContentValues doGetContentValues(BaseEntity entity) {
 		
 		if(!(entity instanceof IncomeSource)) {
 			throw new IllegalArgumentException();
@@ -39,11 +40,17 @@ public class IncomeSourceGateway extends DatabaseGateway {
 	@Override
 	protected BaseEntity loadEntity(long id, Cursor c) {
 		String title = c.getString(c.getColumnIndex(IncomeSourceTableModel.TITLE));
-		EntitiesFactory.createIncomeSource(title);
-		return acc;
-	}	
+		if(title==null || "".equals(title)) {
+			title = ApplicationConfig.getInstance().getString(BaseEntity.UNTITLED);
+		}
+		IncomeSource source = EntitiesFactory.createIncomeSource(title);
+		source.setId(id);
+		return source;
+	}
+	
 	@Override
 	protected TableModel getTableModel() {
 		return TableModel.getModel(IncomeSourceTableModel.class);
-	}		
+	}
+	
 }

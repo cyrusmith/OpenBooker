@@ -2,7 +2,9 @@ package ru.interosite.openbooker.datamodel.domain;
 
 public abstract class BaseEntity {
 	
-	public static final BaseEntity UNKNOWN = new UnknownEntity();
+	public static final String UNTITLED = "untitled";
+	
+	public static final BaseEntity UNKNOWN_ENTITY = new UnknownEntity();
 	
 	private Long mId = null;
 	

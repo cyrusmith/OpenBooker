@@ -48,7 +48,7 @@ public abstract class DatabaseGateway {
 					c.moveToFirst();
 				}
 				else {
-					return BaseEntity.UNKNOWN;
+					return BaseEntity.UNKNOWN_ENTITY;
 				}			
 				BaseEntity entity = loadEntity(id, c);
 				if(entity!=null) {
@@ -62,7 +62,7 @@ public abstract class DatabaseGateway {
 				c.close();
 			}
 		}
-		return BaseEntity.UNKNOWN;
+		return BaseEntity.UNKNOWN_ENTITY;
 	}
 	
 	public long insert(BaseEntity entity) {
@@ -92,8 +92,16 @@ public abstract class DatabaseGateway {
 		return colNames;
 	}	
 	
+	private ContentValues getContentValues(BaseEntity entity) {
+		ContentValues values = doGetContentValues(entity);
+		if(values==null) {
+			return new ContentValues();
+		}
+		return values;
+	}
+	
 	protected abstract TableModel getTableModel();	
-	protected abstract ContentValues getContentValues(BaseEntity entity) ;	
+	protected abstract ContentValues doGetContentValues(BaseEntity entity) ;	
 	protected abstract BaseEntity loadEntity(long id, Cursor c);
 	
 }

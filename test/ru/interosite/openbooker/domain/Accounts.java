@@ -106,9 +106,6 @@ public class Accounts {
 			assertTrue(numUpdated == 1);
 			assertTrue(newInserted  > 0);			
 		}
-		catch(Exception e) {
-			throw new AssertionError("Error during transaction");
-		}
 		finally {
 			db.endTransaction();
 		}

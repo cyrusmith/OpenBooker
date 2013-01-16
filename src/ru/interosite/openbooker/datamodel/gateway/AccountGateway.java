@@ -25,7 +25,7 @@ public class AccountGateway extends DatabaseGateway {
 	}
 
 	@Override
-	protected ContentValues getContentValues(BaseEntity entity) {
+	protected ContentValues doGetContentValues(BaseEntity entity) {
 		if(!(entity instanceof Account)) {
 			throw new IllegalArgumentException();
 		}

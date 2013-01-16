@@ -13,7 +13,7 @@ public class UnknownGateway extends DatabaseGateway {
 	}
 
 	@Override
-	protected ContentValues getContentValues(BaseEntity entity) {
+	protected ContentValues doGetContentValues(BaseEntity entity) {
 		return null;
 	}
 	

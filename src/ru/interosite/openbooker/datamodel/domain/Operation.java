@@ -1,8 +1,26 @@
 package ru.interosite.openbooker.datamodel.domain;
 
-import java.util.Map;
 
 public class Operation extends BaseEntity {
+	
+	public static enum OperationType {
+		
+		REFILL("refill"),
+		DEBIT("debit");
+		
+		private final String mName;
+		
+		private OperationType(String name) {
+			mName = name;
+		}
+		
+		@Override
+		public String toString() {
+			return mName;
+		}
+		
+		valueO
+	}
 	
 	protected final Account mAccount;
 	

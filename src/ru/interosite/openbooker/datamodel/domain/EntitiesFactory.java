@@ -1,8 +1,10 @@
 package ru.interosite.openbooker.datamodel.domain;
 
+import ru.interosite.openbooker.ApplicationConfig;
+
 public class EntitiesFactory {
 	
-	public static OperationRefill createRefillOperation(Account account, Funds funds) {
+	public static Operation createOperation(Account account, Funds funds) {
 		return new OperationRefill(account, funds);
 	}
 	
@@ -14,7 +16,7 @@ public class EntitiesFactory {
 	
 	public static IncomeSource createIncomeSource(String title) {
 		if(title==null || "".equals(title)) {
-			title = BaseEntity.UNTITLED;
+			title = ApplicationConfig.getInstance().getString(BaseEntity.UNTITLED);
 		}
 		IncomeSource source = new IncomeSource(title);
 		return source;

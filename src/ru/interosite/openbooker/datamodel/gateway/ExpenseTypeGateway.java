@@ -15,7 +15,7 @@ public class ExpenseTypeGateway extends DatabaseGateway {
 	}
 
 	@Override
-	protected ContentValues getContentValues(BaseEntity entity) {
+	protected ContentValues doGetContentValues(BaseEntity entity) {
 		// TODO Auto-generated method stub
 		return null;
 	}
