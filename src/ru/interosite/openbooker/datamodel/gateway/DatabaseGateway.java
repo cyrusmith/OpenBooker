@@ -19,8 +19,6 @@ public abstract class DatabaseGateway {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger("ru.interosite.openbooker.datamodel.gateway.DatabaseGateway");
 	
-	public static final DatabaseGateway UNKNOWN_GATEWAY = new UnknownGateway(null);	
-	
 	protected DBAccess mDba = null;
 	
 	public DatabaseGateway(DBAccess dba) {
@@ -66,17 +64,31 @@ public abstract class DatabaseGateway {
 	}
 	
 	public long insert(BaseEntity entity) {
+		if(entity.getId()!=null) {
+			throw new IllegalStateException("Entity has id. Cannot insert.");	
+		}
 		SQLiteDatabase db = mDba.getWritableDatabase();
 		long newId = db.insert(getTableName(), null, getContentValues(entity));
+		if(newId > 0) {
+			entity.setId(newId);
+		}
 		return newId;
 	}
 	
 	public int update(BaseEntity entity) {
-		return 0;
+		if(entity.getId()==null) {
+			throw new IllegalStateException("Entity has no id. Cannot update.");
+		}
+		SQLiteDatabase db = mDba.getWritableDatabase();
+		return db.update(getTableName(), getContentValues(entity), getIdentityWhereClause(entity), getIdentityWhereArgs(entity));
 	}
 	
 	public int delete(BaseEntity entity) {
-		return 0;
+		if(entity.getId()==null) {
+			throw new IllegalStateException("Entity has no id. Cannot delete.");
+		}		
+		SQLiteDatabase db = mDba.getWritableDatabase();
+		return db.delete(getTableName(), getIdentityWhereClause(entity), getIdentityWhereArgs(entity));
 	}
 
 	protected final String getTableName() {
@@ -91,6 +103,14 @@ public abstract class DatabaseGateway {
 		}
 		return colNames;
 	}	
+	
+	protected String[] getIdentityWhereArgs(BaseEntity entity) {
+		return new String[]{ String.valueOf(entity.getId()) };
+	}
+	
+	protected String getIdentityWhereClause(BaseEntity entity) {
+		return TableModel.ID + "=?";
+	}
 	
 	private ContentValues getContentValues(BaseEntity entity) {
 		ContentValues values = doGetContentValues(entity);

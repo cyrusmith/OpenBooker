@@ -36,7 +36,7 @@ public class GatewayRegistry {
 	public GatewayRegistry(DBAccess dba) {
 		mDba = dba;
 		for(Class<? extends BaseEntity> entityClass : mEntityGatewayMap.keySet()) {
-			mGateways.put(entityClass, DatabaseGateway.UNKNOWN_GATEWAY);
+			mGateways.put(entityClass, UnknownGateway.getInstance());
 		}
 	}
 		
@@ -52,7 +52,7 @@ public class GatewayRegistry {
 		}
 		
 		DatabaseGateway gateway = mGateways.get(entityClass);
-		if(gateway==DatabaseGateway.UNKNOWN_GATEWAY) {
+		if(gateway==UnknownGateway.getInstance()) {
 			Constructor<? extends DatabaseGateway> constr;
 			try {
 				constr = gatewayClass.getDeclaredConstructor(DBAccess.class);

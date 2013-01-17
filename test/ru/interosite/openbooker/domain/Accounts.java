@@ -1,6 +1,7 @@
 package ru.interosite.openbooker.domain;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -22,6 +23,7 @@ import ru.interosite.openbooker.datamodel.domain.Funds;
 import ru.interosite.openbooker.datamodel.domain.IncomeSource;
 import ru.interosite.openbooker.datamodel.domain.Operation;
 import ru.interosite.openbooker.datamodel.domain.OperationRefill;
+import ru.interosite.openbooker.datamodel.domain.Operation.OperationType;
 import ru.interosite.openbooker.datamodel.gateway.DatabaseGateway;
 import ru.interosite.openbooker.datamodel.gateway.GatewayRegistry;
 import android.database.Cursor;
@@ -81,7 +83,7 @@ public class Accounts {
 		GatewayRegistry gateways = mDba.getGatewayRegistry();			
 
 		DatabaseGateway accountGateway = gateways.get(Account.class);
-		DatabaseGateway operationGateway = gateways.get(OperationRefill.class);		
+		DatabaseGateway operationGateway = gateways.get(Operation.class);		
 
 		BaseEntity accEntity = accountGateway.findById(accId);
 		assertThat(accEntity, notNullValue());
@@ -93,23 +95,26 @@ public class Accounts {
 		IncomeSource source = (IncomeSource)gateways.get(IncomeSource.class).findById(incomeSourceId);
 		assertThat(source, notNullValue());
 		
-		Operation operation = EntitiesFactory.createRefillOperation(account, funds);
+		OperationRefill operation = (OperationRefill)EntitiesFactory.createOperation(OperationType.REFILL);
+		
+		operation.setAccount(account);
+		operation.setFunds(funds);
 		
 		account.addFunds(funds);
 		
 		SQLiteDatabase db = mDba.getWritableDatabase();
 		try {
+			assertThat(operation.getId(), nullValue());
 			db.beginTransaction();
 			int numUpdated = accountGateway.update(account);
 			long newInserted = operationGateway.insert(operation);
 			db.setTransactionSuccessful();
 			assertTrue(numUpdated == 1);
-			assertTrue(newInserted  > 0);			
+			assertTrue(newInserted  == 1);				
+			assertThat(operation.getId(), notNullValue());
 		}
 		finally {
 			db.endTransaction();
-		}
-								
-	}
-	
+		}							
+	}	
 }

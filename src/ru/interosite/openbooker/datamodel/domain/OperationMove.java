@@ -1,12 +1,12 @@
 package ru.interosite.openbooker.datamodel.domain;
 
 
-public class OperationDebit extends Operation {	
-	OperationDebit() {}		
+public class OperationMove extends Operation {	
+	OperationMove() {}		
 	
 	@Override
 	public OperationType getType() {
-		return OperationType.DEBIT;
+		return OperationType.MOVE;
 	}
 	
 }

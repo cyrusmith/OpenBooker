@@ -4,8 +4,8 @@ import ru.interosite.openbooker.ApplicationConfig;
 
 public class EntitiesFactory {
 	
-	public static Operation createOperation(Account account, Funds funds) {
-		return new OperationRefill(account, funds);
+	public static Operation createOperation(Operation.OperationType type) {
+		return Operation.newInstance(type);
 	}
 	
 	public static Account createAccount(AccountType type, Funds initialFunds) {

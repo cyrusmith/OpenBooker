@@ -8,7 +8,17 @@ import android.database.Cursor;
 
 public class UnknownGateway extends DatabaseGateway {
 
-	public UnknownGateway(DBAccess dba) {
+	private static final ThreadLocal<UnknownGateway> mInstance = new ThreadLocal<UnknownGateway>() {
+		protected UnknownGateway initialValue() {
+			return new UnknownGateway(null);
+		};
+	};
+	
+	public static UnknownGateway getInstance() {
+		return mInstance.get();
+	}	
+	
+	private UnknownGateway(DBAccess dba) {
 		super(dba);
 	}
 
