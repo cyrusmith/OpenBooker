@@ -1,6 +1,5 @@
 package ru.interosite.openbooker.datamodel.gateway;
 
-import ru.interosite.openbooker.datamodel.DBAccess;
 import ru.interosite.openbooker.datamodel.domain.BaseEntity;
 import ru.interosite.openbooker.datamodel.domain.Operation;
 import ru.interosite.openbooker.datamodel.tables.OperationTableModel;
@@ -9,10 +8,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 public class OperationGateway extends DatabaseGateway {
-
-	public OperationGateway(DBAccess dba) {
-		super(dba);
-	}
 
 	@Override
 	protected ContentValues doGetContentValues(BaseEntity entity) {

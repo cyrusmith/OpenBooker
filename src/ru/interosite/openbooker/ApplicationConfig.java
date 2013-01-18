@@ -37,7 +37,7 @@ public class ApplicationConfig {
 			return mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionCode;
 		}
 		catch(Exception e) {
-			throw new RuntimeException("Cannot read version code: " + e.getMessage());
+			throw new RuntimeException("Cannot read version code: " + e.getClass().getName() + " " + (e.getMessage()!=null?e.getMessage():""));
 		}
 	}
 	

@@ -1,28 +1,30 @@
 package ru.interosite.openbooker.datamodel.gateway;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ru.interosite.openbooker.datamodel.DBAccess;
+import ru.interosite.openbooker.datamodel.DomainRequestContext;
 import ru.interosite.openbooker.datamodel.domain.BaseEntity;
+import ru.interosite.openbooker.datamodel.domain.EntitiesFactory;
 import ru.interosite.openbooker.datamodel.tables.TableModel;
 import ru.interosite.openbooker.datamodel.tables.TableModel.Column;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.provider.BaseColumns;
 
 public abstract class DatabaseGateway {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger("ru.interosite.openbooker.datamodel.gateway.DatabaseGateway");
 	
-	protected DBAccess mDba = null;
+	protected final DBAccess mDba;
+	protected final EntitiesFactory mEntitiesFactory;
 	
-	public DatabaseGateway(DBAccess dba) {
-		mDba = dba;
+	public DatabaseGateway() {
+		mDba = DomainRequestContext.getInstance().getDba();
+		mEntitiesFactory = DomainRequestContext.getInstance().getEntitiesFactory();
 	}
 	
 	public Cursor findAll(String orderCol, String orderDir) {

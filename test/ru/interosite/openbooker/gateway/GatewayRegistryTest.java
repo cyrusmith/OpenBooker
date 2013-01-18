@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 
 import ru.interosite.openbooker.ApplicationConfig;
 import ru.interosite.openbooker.datamodel.DBAccess;
+import ru.interosite.openbooker.datamodel.DomainRequestContext;
 import ru.interosite.openbooker.datamodel.domain.Account;
 import ru.interosite.openbooker.datamodel.domain.IncomeSource;
 import ru.interosite.openbooker.datamodel.gateway.AccountGateway;
@@ -26,19 +27,18 @@ public class GatewayRegistryTest {
 	@Before
 	public void setUp() {
 		ApplicationConfig.getInstance().init(Robolectric.application.getApplicationContext());
+		DomainRequestContext.create(new DBAccess(Robolectric.application.getApplicationContext()));
 	}
 	
 	@Test
 	public void get() {		
-		DBAccess dba = new DBAccess(Robolectric.application.getApplicationContext());
-		GatewayRegistry reg = dba.getGatewayRegistry();
+		GatewayRegistry reg = DomainRequestContext.getInstance().getGatewayRegistry();
 		DatabaseGateway gway = reg.get(Account.class);
 		assertThat(gway, instanceOf(AccountGateway.class));
 	}
 	
 	public void getIsSameInstance() {
-		DBAccess dba = new DBAccess(Robolectric.application.getApplicationContext());
-		GatewayRegistry reg = dba.getGatewayRegistry();
+		GatewayRegistry reg = DomainRequestContext.getInstance().getGatewayRegistry();
 		DatabaseGateway gway1 = reg.get(IncomeSource.class);
 		DatabaseGateway gway2 = reg.get(IncomeSource.class);
 		

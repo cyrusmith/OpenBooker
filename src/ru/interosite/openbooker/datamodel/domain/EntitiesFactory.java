@@ -4,17 +4,19 @@ import ru.interosite.openbooker.ApplicationConfig;
 
 public class EntitiesFactory {
 	
-	public static Operation createOperation(Operation.OperationType type) {
+	public EntitiesFactory() {}
+	
+	public Operation createOperation(Operation.OperationType type) {
 		return Operation.newInstance(type);
 	}
 	
-	public static Account createAccount(AccountType type, Funds initialFunds) {
+	public Account createAccount(AccountType type, Funds initialFunds) {
 		Account acc = new Account(type);
 		acc.addFunds(initialFunds);
 		return acc;
 	}
 	
-	public static IncomeSource createIncomeSource(String title) {
+	public  IncomeSource createIncomeSource(String title) {
 		if(title==null || "".equals(title)) {
 			title = ApplicationConfig.getInstance().getString(BaseEntity.UNTITLED);
 		}

@@ -9,11 +9,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 public class ExpenseTypeGateway extends DatabaseGateway {
-
-	public ExpenseTypeGateway(DBAccess dba) {
-		super(dba);
-	}
-
 	@Override
 	protected ContentValues doGetContentValues(BaseEntity entity) {
 		// TODO Auto-generated method stub

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ru.interosite.openbooker.datamodel.DBAccess;
+import ru.interosite.openbooker.datamodel.DomainRequestContext;
 import ru.interosite.openbooker.datamodel.domain.Account;
 import ru.interosite.openbooker.datamodel.domain.BaseEntity;
 import ru.interosite.openbooker.datamodel.domain.ExpenseType;
@@ -15,8 +16,6 @@ import ru.interosite.openbooker.datamodel.domain.OperationDebit;
 import ru.interosite.openbooker.datamodel.domain.OperationRefill;
 
 public class GatewayRegistry {
-	
-	private final DBAccess mDba;
 	
 	private final static Map<Class<? extends BaseEntity>, Class<? extends DatabaseGateway>> mEntityGatewayMap = new HashMap<Class<? extends BaseEntity>, Class<? extends DatabaseGateway>>();
 		
@@ -33,8 +32,7 @@ public class GatewayRegistry {
 	
 	private final Map<Class<? extends BaseEntity>, DatabaseGateway> mGateways = new HashMap<Class<? extends BaseEntity>, DatabaseGateway>();
 	
-	public GatewayRegistry(DBAccess dba) {
-		mDba = dba;
+	public GatewayRegistry() {
 		for(Class<? extends BaseEntity> entityClass : mEntityGatewayMap.keySet()) {
 			mGateways.put(entityClass, UnknownGateway.getInstance());
 		}
@@ -55,16 +53,13 @@ public class GatewayRegistry {
 		if(gateway==UnknownGateway.getInstance()) {
 			Constructor<? extends DatabaseGateway> constr;
 			try {
-				constr = gatewayClass.getDeclaredConstructor(DBAccess.class);
-				gateway = constr.newInstance(mDba);
+				constr = gatewayClass.getDeclaredConstructor();
+				gateway = constr.newInstance();
 				mGateways.put(entityClass, gateway);
 			} catch (Exception e) {
-				throw new RuntimeException("Cannot instantiate gateway class");
-			}
-	
+				throw new RuntimeException("Cannot instantiate gateway class " + gatewayClass.getName() +  ": " + e.getClass().getName());
+			}	
 		}
 		return gateway;
 	}
-
-	
 }

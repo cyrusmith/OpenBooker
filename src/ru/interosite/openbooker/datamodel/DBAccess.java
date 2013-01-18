@@ -19,11 +19,8 @@ public class DBAccess extends SQLiteOpenHelper {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger("ru.interosite.openbooker.datamodel.DBAccess");
 	
-	private final GatewayRegistry mGatewayRegistry;
-	
 	public DBAccess(Context context) {
 		super(context, ApplicationConfig.DB_NAME, null, ApplicationConfig.getInstance().getVersionCode());
-		mGatewayRegistry = new GatewayRegistry(this);
 	}
 	
 	@Override
@@ -52,8 +49,4 @@ public class DBAccess extends SQLiteOpenHelper {
 		
 	}
 	
-	public GatewayRegistry getGatewayRegistry() {
-		return mGatewayRegistry;
-	}
-
 }

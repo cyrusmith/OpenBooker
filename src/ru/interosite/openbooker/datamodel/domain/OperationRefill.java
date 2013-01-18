@@ -5,6 +5,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import ru.interosite.openbooker.datamodel.gateway.GatewayRegistry;
+
 public class OperationRefill extends Operation {
 	
 	public static final String ACCOUNT_ID = "account_id";
@@ -49,6 +51,18 @@ public class OperationRefill extends Operation {
 	@Override
 	public void configFromJson(String json) throws JSONException {
 		JSONObject data = (JSONObject)new JSONTokener(json).nextValue();
+		
+		long accId = data.getLong(ACCOUNT_ID);
+		String currencyCode = data.getString(CURRENCY_CODE);
+		long value = data.getLong(VALUE);
+		
+		if(accId > 0) {
+			
+		}
+		else {
+			throw new IllegalStateException("Account id not set for refill operation");
+		}
+		
 	}
 	
 	@Override
