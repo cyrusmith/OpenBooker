@@ -14,7 +14,7 @@ public class DomainRequestContext {
 	public static void create(DBAccess dba) {
 		mInstance.set(new DomainRequestContext(dba));
 	}
-	
+		
 	private final DBAccess mDba;
 	private final GatewayRegistry mGatewayRegistry;
 	private final EntitiesFactory mEntitiesFactory;

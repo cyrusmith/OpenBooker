@@ -10,10 +10,23 @@ public class EntitiesFactory {
 		return Operation.newInstance(type);
 	}
 	
-	public Account createAccount(AccountType type, Funds initialFunds) {
+	public Account createAccount(AccountType type, String title, Funds initialFunds) {
 		Account acc = new Account(type);
-		acc.addFunds(initialFunds);
+		acc.setTitle(title);
+		if(initialFunds != Funds.EMPTY) {
+			acc.addFunds(initialFunds);
+		}
 		return acc;
+	}
+	
+	public ExpenseType createExpenseType(String title, ExpenseType parent) {
+		ExpenseType type = new ExpenseType();
+		type.setTitle(title);
+		if(parent==null) {
+			parent = ExpenseType.ROOT;
+		}		
+		type.setParent(parent);
+		return type;
 	}
 	
 	public  IncomeSource createIncomeSource(String title) {

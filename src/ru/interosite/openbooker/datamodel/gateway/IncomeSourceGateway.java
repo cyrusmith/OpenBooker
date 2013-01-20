@@ -1,10 +1,7 @@
 package ru.interosite.openbooker.datamodel.gateway;
 
 import ru.interosite.openbooker.ApplicationConfig;
-import ru.interosite.openbooker.datamodel.DBAccess;
-import ru.interosite.openbooker.datamodel.DomainRequestContext;
 import ru.interosite.openbooker.datamodel.domain.BaseEntity;
-import ru.interosite.openbooker.datamodel.domain.EntitiesFactory;
 import ru.interosite.openbooker.datamodel.domain.IncomeSource;
 import ru.interosite.openbooker.datamodel.tables.IncomeSourceTableModel;
 import ru.interosite.openbooker.datamodel.tables.TableModel;
@@ -14,11 +11,12 @@ import android.database.Cursor;
 public class IncomeSourceGateway extends DatabaseGateway {
 
 	@Override
+	protected Class<? extends BaseEntity> getEntityClass() {
+		return IncomeSource.class;
+	}
+	
+	@Override
 	protected ContentValues doGetContentValues(BaseEntity entity) {
-		
-		if(!(entity instanceof IncomeSource)) {
-			throw new IllegalArgumentException();
-		}
 		
 		IncomeSource source = (IncomeSource)entity;
 		

@@ -4,6 +4,8 @@ import java.util.Currency;
 import java.util.HashMap;
 import java.util.Map;
 
+import ru.interosite.openbooker.ApplicationConfig;
+
 
 public class Account extends BaseEntity {
 	
@@ -17,6 +19,7 @@ public class Account extends BaseEntity {
 			throw new IllegalArgumentException("Type not set");
 		}
 		mType = type;
+		mTitle = ApplicationConfig.getInstance().getString(BaseEntity.UNTITLED);
 	}
 	
 	public void addFunds(Funds funds) {
@@ -27,6 +30,9 @@ public class Account extends BaseEntity {
 	}
 	
 	public void setTitle(String title) {
+		if(title==null || "".equals(title)) {
+			title = ApplicationConfig.getInstance().getString(BaseEntity.UNTITLED);
+		}
 		mTitle = title;
 	}
 	

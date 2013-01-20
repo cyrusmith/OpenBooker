@@ -115,6 +115,9 @@ public abstract class DatabaseGateway {
 	}
 	
 	private ContentValues getContentValues(BaseEntity entity) {
+		if(!getEntityClass().isInstance(entity)) {
+			throw new IllegalStateException("Cannot cast entity of class " + entity.getClass().getName() + " to " + getEntityClass().getName());			
+		}
 		ContentValues values = doGetContentValues(entity);
 		if(values==null) {
 			return new ContentValues();
@@ -122,6 +125,7 @@ public abstract class DatabaseGateway {
 		return values;
 	}
 	
+	protected abstract Class<? extends BaseEntity> getEntityClass();	
 	protected abstract TableModel getTableModel();	
 	protected abstract ContentValues doGetContentValues(BaseEntity entity) ;	
 	protected abstract BaseEntity loadEntity(long id, Cursor c);

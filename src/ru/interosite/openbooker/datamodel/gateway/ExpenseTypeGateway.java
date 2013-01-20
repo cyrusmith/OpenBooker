@@ -1,18 +1,31 @@
 package ru.interosite.openbooker.datamodel.gateway;
 
-import ru.interosite.openbooker.datamodel.DBAccess;
 import ru.interosite.openbooker.datamodel.domain.BaseEntity;
-import ru.interosite.openbooker.datamodel.tables.AccountsTableModel;
+import ru.interosite.openbooker.datamodel.domain.ExpenseType;
 import ru.interosite.openbooker.datamodel.tables.ExpenseTypeTableModel;
 import ru.interosite.openbooker.datamodel.tables.TableModel;
 import android.content.ContentValues;
 import android.database.Cursor;
 
 public class ExpenseTypeGateway extends DatabaseGateway {
+
+	@Override
+	protected Class<? extends BaseEntity> getEntityClass() {
+		return ExpenseType.class;
+	}
+	
 	@Override
 	protected ContentValues doGetContentValues(BaseEntity entity) {
-		// TODO Auto-generated method stub
-		return null;
+		ExpenseType type = (ExpenseType)entity;
+		ContentValues values = new ContentValues();
+		values.put(ExpenseTypeTableModel.TITLE, type.getTitle());
+		
+		long parentId = 0;
+		if(type.getParent()!=ExpenseType.ROOT) {
+			parentId = type.getParent().getId();
+		}
+		values.put(ExpenseTypeTableModel.PARENT_TYPE_ID, parentId);
+		return values;
 	}
 
 	@Override

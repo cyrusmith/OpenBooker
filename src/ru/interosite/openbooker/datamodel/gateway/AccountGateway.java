@@ -4,11 +4,9 @@ import java.util.ArrayList;
 import java.util.Currency;
 import java.util.List;
 
-import ru.interosite.openbooker.datamodel.DBAccess;
 import ru.interosite.openbooker.datamodel.domain.Account;
 import ru.interosite.openbooker.datamodel.domain.AccountType;
 import ru.interosite.openbooker.datamodel.domain.BaseEntity;
-import ru.interosite.openbooker.datamodel.domain.EntitiesFactory;
 import ru.interosite.openbooker.datamodel.domain.Funds;
 import ru.interosite.openbooker.datamodel.tables.AccountBalanceTableModel;
 import ru.interosite.openbooker.datamodel.tables.AccountsTableModel;
@@ -21,10 +19,12 @@ import android.text.TextUtils;
 public class AccountGateway extends DatabaseGateway {
 
 	@Override
+	protected Class<? extends BaseEntity> getEntityClass() {
+		return Account.class;
+	}
+	
+	@Override
 	protected ContentValues doGetContentValues(BaseEntity entity) {
-		if(!(entity instanceof Account)) {
-			throw new IllegalArgumentException();
-		}
 		
 		Account acc = (Account)entity;
 		

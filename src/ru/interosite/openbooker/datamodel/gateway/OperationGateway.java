@@ -10,10 +10,12 @@ import android.database.Cursor;
 public class OperationGateway extends DatabaseGateway {
 
 	@Override
+	protected Class<? extends BaseEntity> getEntityClass() {
+		return Operation.class;
+	}
+	
+	@Override
 	protected ContentValues doGetContentValues(BaseEntity entity) {
-		if(!(entity instanceof Operation)) {
-			throw new IllegalArgumentException("Entity is not an Operation");
-		}
 		
 		ContentValues values = new ContentValues();
 		
