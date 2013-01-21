@@ -51,7 +51,7 @@ public class OperationScriptsTest {
 		GatewayRegistry gatewaysRegistry = DomainRequestContext.getInstance().getGatewayRegistry();
 		EntitiesFactory entitiesFactory = DomainRequestContext.getInstance().getEntitiesFactory();
 		
-		Account acc = entitiesFactory.createAccount(AccountType.CASH, Funds.EMPTY);
+		Account acc = entitiesFactory.createAccount(AccountType.CASH, "Wallet", Funds.EMPTY);
 		AccountGateway accGateway = (AccountGateway)gatewaysRegistry.get(Account.class);
 		
 		long newAccId = accGateway.insert(acc);
@@ -67,6 +67,7 @@ public class OperationScriptsTest {
 	
 	@Before
 	public void setUp() {
+		System.setProperty("robolectric.logging", "stdout");
 		ApplicationConfig.getInstance().init(Robolectric.application.getApplicationContext());
 		mDba = new DBAccess(Robolectric.application.getApplicationContext());	
 		createSomeData();
@@ -80,14 +81,15 @@ public class OperationScriptsTest {
 		Funds fundsUSD = new Funds(66600, Currency.getInstance("USD"));
 		long expenceTypeId = 1; 
 		
-		boolean res = OperationScripts.debit(mDba, accId, fundsRUR, expenceTypeId);		
+		DomainRequestContext domainContext = DomainRequestContext.create(mDba);
+		
+		boolean res = OperationScripts.debit(domainContext, accId, fundsRUR, expenceTypeId);		
 		assertTrue(res);
 		
-		res = OperationScripts.debit(mDba, accId, fundsUSD, expenceTypeId);		
+		res = OperationScripts.debit(domainContext, accId, fundsUSD, expenceTypeId);		
 		assertTrue(res);
 				
-		////////////////////////////
-		DomainRequestContext.create(mDba);
+		////////////////////////////		
 		GatewayRegistry gatewaysRegistry = DomainRequestContext.getInstance().getGatewayRegistry();
 		
 		AccountGateway account = (AccountGateway)gatewaysRegistry.get(Account.class);

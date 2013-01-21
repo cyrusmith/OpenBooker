@@ -1,5 +1,7 @@
 package ru.interosite.openbooker.datamodel.gateway;
 
+import org.slf4j.LoggerFactory;
+
 import ru.interosite.openbooker.datamodel.domain.BaseEntity;
 import ru.interosite.openbooker.datamodel.domain.Operation;
 import ru.interosite.openbooker.datamodel.tables.OperationTableModel;
@@ -9,6 +11,8 @@ import android.database.Cursor;
 
 public class OperationGateway extends DatabaseGateway {
 
+	private static final String TAG = "ru.interosite.openbooker.datamodel.gateway.OperationGateway";
+	
 	@Override
 	protected Class<? extends BaseEntity> getEntityClass() {
 		return Operation.class;
@@ -22,14 +26,22 @@ public class OperationGateway extends DatabaseGateway {
 		Operation op = (Operation)entity;
 		values.put(OperationTableModel.TYPE, op.getType().toString());
 		values.put(OperationTableModel.DATETIME, op.getDateTime());
-		values.put(OperationTableModel.OPERATION_DATA, op.getDataJson());
+		
+		String jsonStr = "{}";
+		try {
+			jsonStr = op.getDataJson().toString();
+		}
+		catch(Exception e) {
+			LoggerFactory.getLogger(TAG).warn("Error getting json data from operation {}: {}", op.getClass().getName(), e.getClass().getName()); 
+		}
+		
+		values.put(OperationTableModel.OPERATION_DATA, jsonStr);
 		
 		return values;
 	}
 
 	@Override
 	protected BaseEntity loadEntity(long id, Cursor c) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

@@ -11,8 +11,9 @@ public class DomainRequestContext {
 		return mInstance.get();
 	}
 	
-	public static void create(DBAccess dba) {
+	public static DomainRequestContext create(DBAccess dba) {
 		mInstance.set(new DomainRequestContext(dba));
+		return mInstance.get();
 	}
 		
 	private final DBAccess mDba;

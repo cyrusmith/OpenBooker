@@ -20,12 +20,13 @@ public class TableModel {
 		mModels.put(OperationTableModel.class, new OperationTableModel());
 		mModels.put(OperationFactTableModel.class, new OperationFactTableModel());
 		mModels.put(IncomeSourceTableModel.class, new IncomeSourceTableModel());
+		mModels.put(ExpenseTypeTableModel.class, new ExpenseTypeTableModel());
 	}
 	
 	public static TableModel getModel(Class<? extends TableModel> modelClass) {
 		TableModel model = mModels.get(modelClass);
 		if(model==null) {
-			throw new IllegalArgumentException("Not model info for " + modelClass + " found");	
+			throw new IllegalArgumentException("No model info for " + modelClass + " is found");	
 		}
 		return model;
 	}

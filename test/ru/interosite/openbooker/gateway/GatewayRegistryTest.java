@@ -26,6 +26,7 @@ public class GatewayRegistryTest {
 	
 	@Before
 	public void setUp() {
+		System.setProperty("robolectric.logging", "stdout");
 		ApplicationConfig.getInstance().init(Robolectric.application.getApplicationContext());
 		DomainRequestContext.create(new DBAccess(Robolectric.application.getApplicationContext()));
 	}

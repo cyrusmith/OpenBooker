@@ -53,8 +53,7 @@ public class Accounts {
 		createSomeData();
 	}
 	private void createSomeData() {
-		Account acc = mEntitiesFactory.createAccount(AccountType.CASH, new Funds(100000, Currency.getInstance("RUR")));
-		acc.setTitle("Wallet");
+		Account acc = mEntitiesFactory.createAccount(AccountType.CASH, "Wallet", new Funds(100000, Currency.getInstance("RUR")));
 		mAccId = mGatewayRegistry.get(Account.class).insert(acc);
 		assertEquals(1, mAccId);
 		

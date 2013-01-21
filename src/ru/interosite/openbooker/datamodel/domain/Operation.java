@@ -5,11 +5,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.LoggerFactory;
 
 public abstract class Operation extends BaseEntity {
 	
-	private static final String TAG = ""; 
+	private static final String TAG = "ru.interosite.openbooker.datamodel.domain.Operation"; 
+	
+	public static final String CURRENCY_CODE = "currency_code";
+	public static final String VALUE = "value";	
 	
 	public static enum OperationType {
 		
@@ -70,8 +74,17 @@ public abstract class Operation extends BaseEntity {
 	}
 	
 	private long mDateTime = 0;  
+	private Funds mFunds = Funds.EMPTY;  
 	
 	Operation() {}
+	
+	public void setFunds(Funds funds) {
+		mFunds = funds;
+	}
+	
+	public Funds getFunds() {
+		return mFunds;
+	}
 	
 	public void setDateTime(long dateTime) {
 		mDateTime = dateTime;
@@ -84,8 +97,21 @@ public abstract class Operation extends BaseEntity {
 	public void configFromJson(String json) throws JSONException {
 	}
 	
-	public String getDataJson() {
-		return "{}";
+	public JSONObject getDataJson() {
+		
+		JSONObject jsonObj = new JSONObject();
+		
+		if(mFunds!=null) {
+			try {
+				jsonObj.put(CURRENCY_CODE, mFunds.getCurrency().getCurrencyCode());
+				jsonObj.put(VALUE, mFunds.getValue());
+			} catch (JSONException e) {
+				LoggerFactory.getLogger(TAG).warn("JSONException : {}", e);
+				jsonObj = new JSONObject();
+			}			
+		}
+		
+		return jsonObj;
 	}
 	
 	public abstract OperationType getType();

@@ -40,9 +40,8 @@ public class AccountGateway extends DatabaseGateway {
 		String title = c.getString(c.getColumnIndex(AccountsTableModel.TITLE));
 		int typeId = c.getInt(c.getColumnIndex(AccountsTableModel.TYPE_ID));
 		AccountType type = AccountType.valueOf(typeId);
-		Account acc = mEntitiesFactory.createAccount(type, Funds.EMPTY);
+		Account acc = mEntitiesFactory.createAccount(type, title, Funds.EMPTY);
 		acc.setId(id);
-		acc.setTitle(title);
 		List<Funds> fundsList = loadFunds(id);
 		for(Funds funds : fundsList) {
 			acc.addFunds(funds);	

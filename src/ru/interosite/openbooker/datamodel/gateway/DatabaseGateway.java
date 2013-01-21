@@ -38,8 +38,9 @@ public abstract class DatabaseGateway {
 		SQLiteDatabase db = mDba.getReadableDatabase();
 		return db.query(getTableName(), getColumns(), null, null, null, null, orderBy);		
 	}
-		
-	public BaseEntity findById(long id) {
+	
+	//TODO cache entities please
+	public BaseEntity findByIdsdfsdfsd(long id) {
 		SQLiteDatabase db = mDba.getReadableDatabase();
 		Cursor c = db.query(getTableName(), getColumns(), TableModel.ID + "=?", new String[]{String.valueOf(id)}, null, null, null);
 		if(c!=null) {
