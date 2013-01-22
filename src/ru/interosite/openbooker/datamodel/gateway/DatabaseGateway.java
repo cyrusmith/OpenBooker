@@ -14,8 +14,11 @@ import ru.interosite.openbooker.datamodel.tables.TableModel.Column;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.SparseArray;
 
 public abstract class DatabaseGateway {
+	
+	SparseArray<BaseEntity> mCache = new SparseArray<BaseEntity>();
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger("ru.interosite.openbooker.datamodel.gateway.DatabaseGateway");
 	
@@ -39,8 +42,17 @@ public abstract class DatabaseGateway {
 		return db.query(getTableName(), getColumns(), null, null, null, null, orderBy);		
 	}
 	
-	//TODO cache entities please
-	public BaseEntity findByIdsdfsdfsd(long id) {
+	public final BaseEntity findById(long id) {
+		
+		if(id > Integer.MAX_VALUE) {
+			throw new RuntimeException("Id is greate than Integer.MAX_VALUE.");
+		}
+		
+		BaseEntity entity = mCache.get((int)id);
+		if(entity!=null) {
+			return entity;
+		}
+		
 		SQLiteDatabase db = mDba.getReadableDatabase();
 		Cursor c = db.query(getTableName(), getColumns(), TableModel.ID + "=?", new String[]{String.valueOf(id)}, null, null, null);
 		if(c!=null) {
@@ -51,8 +63,9 @@ public abstract class DatabaseGateway {
 				else {
 					return BaseEntity.UNKNOWN_ENTITY;
 				}			
-				BaseEntity entity = loadEntity(id, c);
+				entity = loadEntity(id, c);
 				if(entity!=null) {
+					mCache.put((int)id, entity);
 					return entity;
 				}
 			}
@@ -66,7 +79,7 @@ public abstract class DatabaseGateway {
 		return BaseEntity.UNKNOWN_ENTITY;
 	}
 	
-	public long insert(BaseEntity entity) {
+	public final long insert(BaseEntity entity) {
 		if(entity.getId()!=null) {
 			throw new IllegalStateException("Entity has id. Cannot insert.");	
 		}
@@ -74,11 +87,18 @@ public abstract class DatabaseGateway {
 		long newId = db.insert(getTableName(), null, getContentValues(entity));
 		if(newId > 0) {
 			entity.setId(newId);
+			mCache.put((int)newId, entity);
 		}
 		return newId;
 	}
 	
 	public int update(BaseEntity entity) {
+		if(entity==null) {
+			throw new IllegalArgumentException("Entity is null");
+		}
+		if(!getEntityClass().isInstance(entity)) {
+			throw new IllegalArgumentException("Entity class is invalid: was " + entity.getClass().getName() + ", expected " + getEntityClass().getName());
+		}
 		if(entity.getId()==null) {
 			throw new IllegalStateException("Entity has no id. Cannot update.");
 		}
@@ -89,9 +109,15 @@ public abstract class DatabaseGateway {
 	public int delete(BaseEntity entity) {
 		if(entity.getId()==null) {
 			throw new IllegalStateException("Entity has no id. Cannot delete.");
-		}		
+		}	
+		int id = entity.getId().intValue();
 		SQLiteDatabase db = mDba.getWritableDatabase();
-		return db.delete(getTableName(), getIdentityWhereClause(entity), getIdentityWhereArgs(entity));
+		int numAffected = db.delete(getTableName(), getIdentityWhereClause(entity), getIdentityWhereArgs(entity));
+		if(numAffected==1) {
+			entity.setId(null);
+			mCache.remove(id);
+		}
+		return numAffected;
 	}
 
 	protected final String getTableName() {

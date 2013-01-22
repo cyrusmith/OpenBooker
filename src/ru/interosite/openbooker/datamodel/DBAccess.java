@@ -37,6 +37,11 @@ public class DBAccess extends SQLiteOpenHelper {
 				for(Column col: cols) {
 					sb.append(", ").append(col.getName()).append(" ").append(col.getType());
 				}
+				
+				if(model.isCompoundKey()) {
+					sb.append(", ").append(model.getCompoundKeyString());	
+				}
+				
 				String createSql = String.format(sql, tableName, sb.toString());
 				LOGGER.debug("Execute create query: {}", createSql);
 				db.execSQL(createSql);

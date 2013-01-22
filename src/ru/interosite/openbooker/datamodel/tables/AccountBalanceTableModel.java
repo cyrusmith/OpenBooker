@@ -12,6 +12,8 @@ public class AccountBalanceTableModel extends TableModel {
 		addColumn(ACCOUNT_ID, "INTEGER NOT NULL");
 		addColumn(CURRENCY_CODE, "TEXT NOT NULL");
 		addColumn(VALUE, "INTEGER NOT NULL");
+		
+		setCompoundKey(ACCOUNT_ID, CURRENCY_CODE);
 	}
 
 }

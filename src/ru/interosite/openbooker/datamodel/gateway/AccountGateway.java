@@ -3,7 +3,10 @@ package ru.interosite.openbooker.datamodel.gateway;
 import java.util.ArrayList;
 import java.util.Currency;
 import java.util.List;
+import java.util.Map;
 
+import ru.interosite.openbooker.datamodel.DBAccess;
+import ru.interosite.openbooker.datamodel.DomainRequestContext;
 import ru.interosite.openbooker.datamodel.domain.Account;
 import ru.interosite.openbooker.datamodel.domain.AccountType;
 import ru.interosite.openbooker.datamodel.domain.BaseEntity;
@@ -21,6 +24,35 @@ public class AccountGateway extends DatabaseGateway {
 	@Override
 	protected Class<? extends BaseEntity> getEntityClass() {
 		return Account.class;
+	}
+	
+	@Override
+	public int update(BaseEntity entity) {
+		
+		int updNum = super.update(entity);
+		
+		if(updNum < 1) {
+			throw new RuntimeException("Error updating account entity with id " + entity.getId());
+		}
+		
+		Account acc = (Account)entity;
+		Map<Currency, Funds> accFunds = acc.getFunds();
+		if(accFunds.size() > 0) {
+			DBAccess dba = DomainRequestContext.getInstance().getDba();	
+			String balanceTableName = TableModel.getModel(AccountBalanceTableModel.class).getTableName();
+			dba.getWritableDatabase().delete(balanceTableName, AccountBalanceTableModel.ACCOUNT_ID + "=?",	new String[]{String.valueOf(entity.getId())});
+			for(Funds funds : accFunds.values()) {
+				ContentValues values = new ContentValues();
+				values.put(AccountBalanceTableModel.ACCOUNT_ID, entity.getId());
+				values.put(AccountBalanceTableModel.CURRENCY_CODE, funds.getCurrency().getCurrencyCode());
+				values.put(AccountBalanceTableModel.VALUE, funds.getValue());
+				dba.getWritableDatabase().insert(balanceTableName, null, values);
+			}			
+		}
+		
+		//TODO update analytics
+		
+		return updNum;
 	}
 	
 	@Override

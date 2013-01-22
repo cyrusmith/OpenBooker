@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +38,7 @@ public class TableModel {
 	
 	private String mTableName = null;		
 	private String mCompoundKeyString = null;
-	private Map<String, Column> mColumns = new HashMap<String, Column>();
+	private Map<String, Column> mColumns = new LinkedHashMap<String, Column>();
 	
 	protected List<String> mInsertsOnCreate = new ArrayList<String>();		
 	

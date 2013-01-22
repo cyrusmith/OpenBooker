@@ -11,9 +11,6 @@ public abstract class BaseEntity {
 	BaseEntity() {}
 	
 	public void setId(Long id) {
-		if(id==null) {
-			throw new IllegalArgumentException("Id is null");
-		}
 		mId = id;
 	}
 	
