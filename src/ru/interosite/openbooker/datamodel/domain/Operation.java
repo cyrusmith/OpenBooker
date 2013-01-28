@@ -12,9 +12,6 @@ public abstract class Operation extends BaseEntity {
 	
 	private static final String TAG = "ru.interosite.openbooker.datamodel.domain.Operation"; 
 	
-	public static final String CURRENCY_CODE = "currency_code";
-	public static final String VALUE = "value";	
-	
 	public static enum OperationType {
 		
 		UNKNOWN(""),
@@ -97,21 +94,8 @@ public abstract class Operation extends BaseEntity {
 	public void configFromJson(String json) throws JSONException {
 	}
 	
-	public JSONObject getDataJson() {
-		
-		JSONObject jsonObj = new JSONObject();
-		
-		if(mFunds!=null) {
-			try {
-				jsonObj.put(CURRENCY_CODE, mFunds.getCurrency().getCurrencyCode());
-				jsonObj.put(VALUE, mFunds.getValue());
-			} catch (JSONException e) {
-				LoggerFactory.getLogger(TAG).warn("JSONException : {}", e);
-				jsonObj = new JSONObject();
-			}			
-		}
-		
-		return jsonObj;
+	public String getDataJson() {
+		return new JSONObject().toString(); 
 	}
 	
 	public abstract OperationType getType();

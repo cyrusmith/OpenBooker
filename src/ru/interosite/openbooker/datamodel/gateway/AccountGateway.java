@@ -46,7 +46,9 @@ public class AccountGateway extends DatabaseGateway {
 				values.put(AccountBalanceTableModel.ACCOUNT_ID, entity.getId());
 				values.put(AccountBalanceTableModel.CURRENCY_CODE, funds.getCurrency().getCurrencyCode());
 				values.put(AccountBalanceTableModel.VALUE, funds.getValue());
-				dba.getWritableDatabase().insert(balanceTableName, null, values);
+				if(dba.getWritableDatabase().insert(balanceTableName, null, values) < 1) {
+					throw new RuntimeException("Cannot save account funds for account " + acc.getId());
+				}
 			}			
 		}
 		

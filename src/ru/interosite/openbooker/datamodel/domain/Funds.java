@@ -24,7 +24,7 @@ public class Funds {
 	
 	public Funds plus(Funds funds) {
 		
-		if(funds==null) {
+		if(funds==null || funds==Funds.EMPTY) {
 			return new Funds(mValue, mCurrency);
 		}
 		

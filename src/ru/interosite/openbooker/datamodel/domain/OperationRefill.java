@@ -4,6 +4,7 @@ package ru.interosite.openbooker.datamodel.domain;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import org.slf4j.LoggerFactory;
 
 import ru.interosite.openbooker.datamodel.DomainRequestContext;
 import ru.interosite.openbooker.datamodel.gateway.GatewayRegistry;
@@ -79,15 +80,16 @@ public class OperationRefill extends Operation {
 	}
 	
 	@Override
-	public JSONObject getDataJson() {
-		JSONObject jsonObj = super.getDataJson();		
+	public String getDataJson() {
+		JSONObject jsonObj = new JSONObject();		
 		try {
 			long accId = mAccount.getId()==null? 0 : mAccount.getId();
 			jsonObj.put(ACCOUNT_ID, String.valueOf(accId));
 		} catch (JSONException e) {
 			jsonObj = new JSONObject();
+			LoggerFactory.getLogger(TAG).warn("Error during json operation: {}", e);
 		}
-		return jsonObj;
+		return jsonObj.toString();
 	}
 	
 }

@@ -57,6 +57,11 @@ public class OperationScriptsTest {
 		long newAccId = accGateway.insert(acc);
 		assertEquals(1, newAccId);
 		
+		Account acc2 = entitiesFactory.createAccount(AccountType.DEBIT_CARD, "Salary card", Funds.EMPTY);
+		
+		long newAccId2 = accGateway.insert(acc2);
+		assertEquals(2, newAccId2);
+		
 		ExpenseType extType = entitiesFactory.createExpenseType("≈‰‡", ExpenseType.ROOT);
 		ExpenseTypeGateway expGateway = (ExpenseTypeGateway)gatewaysRegistry.get(ExpenseType.class);
 		long newExtTypeId = expGateway.insert(extType);
@@ -147,6 +152,49 @@ public class OperationScriptsTest {
 		
 		assertThat(accFunds.get(Currency.getInstance("USD")), notNullValue());
 		assertEquals(66600, accFunds.get(Currency.getInstance("USD")).getValue());
+		
+	}
+	
+	@Test
+	public void moveTest() {
+		
+		long accId1 = 1;
+		long accId2 = 2;
+		Funds fundsRUR = new Funds(30000, Currency.getInstance("RUR"));
+		long sourceId = 1;
+		
+		DomainRequestContext domainContext = DomainRequestContext.create(mDba);
+		
+		boolean res = OperationScripts.move(domainContext, accId1, accId2, fundsRUR);		
+		assertTrue(!res);
+						
+		res = OperationScripts.refill(domainContext, accId1, new Funds(100000, Currency.getInstance("RUR")), sourceId);
+		assertTrue(res);
+		
+		res = OperationScripts.move(domainContext, accId1, accId2, fundsRUR);
+		
+		assertTrue(res);
+		
+		////////////////////////////
+		DomainRequestContext.create(mDba);
+		GatewayRegistry gatewaysRegistry = DomainRequestContext.getInstance().getGatewayRegistry();
+		
+		AccountGateway account = (AccountGateway)gatewaysRegistry.get(Account.class);
+		
+		Account acc1 = (Account)account.findById(accId1);
+		Account acc2 = (Account)account.findById(accId2);
+		
+		Map<Currency, Funds> accFunds1 = acc1.getFunds();
+		Map<Currency, Funds> accFunds2 = acc2.getFunds();
+		
+		assertEquals(1, accFunds1.size());
+		assertEquals(1, accFunds2.size());
+
+		assertThat(accFunds1.get(Currency.getInstance("RUR")), notNullValue());
+		assertEquals(70000, accFunds1.get(Currency.getInstance("RUR")).getValue());		
+		
+		assertThat(accFunds2.get(Currency.getInstance("RUR")), notNullValue());
+		assertEquals(30000, accFunds2.get(Currency.getInstance("RUR")).getValue());		
 		
 	}
 	

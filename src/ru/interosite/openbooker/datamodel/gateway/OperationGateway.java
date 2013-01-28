@@ -26,6 +26,8 @@ public class OperationGateway extends DatabaseGateway {
 		Operation op = (Operation)entity;
 		values.put(OperationTableModel.TYPE, op.getType().toString());
 		values.put(OperationTableModel.DATETIME, op.getDateTime());
+		values.put(OperationTableModel.CURRENCY_CODE, op.getFunds().getCurrency().getCurrencyCode());
+		values.put(OperationTableModel.VALUE, op.getFunds().getValue());
 		
 		String jsonStr = "{}";
 		try {

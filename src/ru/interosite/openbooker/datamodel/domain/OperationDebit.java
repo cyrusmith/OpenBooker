@@ -2,6 +2,7 @@ package ru.interosite.openbooker.datamodel.domain;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.LoggerFactory;
 
 
 public class OperationDebit extends Operation {	
@@ -38,17 +39,23 @@ public class OperationDebit extends Operation {
 	}
 	
 	@Override
-	public JSONObject getDataJson() {
-		JSONObject jsonObj = super.getDataJson();		
+	public void configFromJson(String json) throws JSONException {
+		throw new UnsupportedOperationException();
+	}
+	
+	@Override
+	public String getDataJson() {
+		JSONObject jsonObj = new JSONObject();		
 		try {
 			long accId = mAccount.getId()==null? 0 : mAccount.getId();
 			long extTypeId = mExpenseType.getId()==null? 0 : mExpenseType.getId();
 			jsonObj.put(ACCOUNT_ID, String.valueOf(accId));
 			jsonObj.put(EXPENSE_TYPE_ID, String.valueOf(extTypeId));
 		} catch (JSONException e) {
-			jsonObj = new JSONObject();
+			LoggerFactory.getLogger(TAG).warn("Error during json operation: {}", e);
+			jsonObj = new JSONObject(); 
 		}
-		return jsonObj;
+		return jsonObj.toString();
 	}
 	
 }

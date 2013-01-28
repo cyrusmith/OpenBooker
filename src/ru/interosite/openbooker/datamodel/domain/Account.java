@@ -6,7 +6,6 @@ import java.util.Map;
 
 import ru.interosite.openbooker.ApplicationConfig;
 
-
 public class Account extends BaseEntity {
 	
 	private Map<Currency, Funds> mFunds = new HashMap<Currency, Funds>();
@@ -24,7 +23,7 @@ public class Account extends BaseEntity {
 	
 	public void addFunds(Funds funds) {
 		if(mFunds.containsKey(funds.getCurrency())) {
-			funds.plus(mFunds.get(funds.getCurrency()));
+			funds = funds.plus(mFunds.get(funds.getCurrency()));
 		}
 		mFunds.put(funds.getCurrency(), funds);
 	}
@@ -50,6 +49,21 @@ public class Account extends BaseEntity {
 	
 	public Map<Currency, Funds> getFunds() {
 		return mFunds;
+	}
+	
+	public boolean hasSufficientFunds(Funds funds) {		
+		if(funds==null) {
+			throw new IllegalArgumentException("Funds is null");
+		}
+		if(funds==Funds.EMPTY) {
+			return true;
+		}
+		Currency currency = funds.getCurrency();
+		Funds accFunds = mFunds.get(currency);
+		if(accFunds!=null) {
+			 return accFunds.getValue()>=funds.getValue();
+		}
+		return false;
 	}
 	
 }
