@@ -6,6 +6,7 @@
     
 	<string name="add_income">Add income</string>    
 	<string name="add_expense">Add spending</string>    
-	<string name="add_move">Move funds</string>    
+	<string name="add_move">Move funds</string>
+	<string name="go_to_report">Go to report</string>    
 
 </resources>

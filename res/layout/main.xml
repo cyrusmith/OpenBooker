@@ -16,7 +16,7 @@
         android:id="@+id/balance"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/balance_height"
-        android:background="#0000FF">
+        >
     </FrameLayout>
 
 </LinearLayout>
