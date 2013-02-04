@@ -2,6 +2,7 @@ package ru.interosite.openbooker;
 
 import java.util.ArrayList;
 import java.util.Currency;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,88 +17,51 @@ import ru.interosite.openbooker.datamodel.DomainRequestContext;
 import ru.interosite.openbooker.datamodel.domain.Account;
 import ru.interosite.openbooker.datamodel.domain.AccountType;
 import ru.interosite.openbooker.datamodel.domain.Funds;
+import ru.interosite.openbooker.datamodel.tables.AccountTypeTableModel;
+import ru.interosite.openbooker.datamodel.tables.AccountsTableModel;
+import ru.interosite.openbooker.datamodel.tables.TableModel;
 import android.content.Context;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.CursorAdapter;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
 public class AccountsFragment extends ListFragment {
 	
-	private class AccountsArrayAdapter extends ArrayAdapter<Account> {
+	private class ListViewBinder implements SimpleCursorAdapter.ViewBinder {
 		
-		private int mResource;
+		private Map<String, Integer> mColIdx = new HashMap<String, Integer>();
 		
-		public AccountsArrayAdapter(Context context,
-				int textViewResourceId, List<Account> accounts) {			
-			super(context, textViewResourceId, accounts);	
-			mResource = textViewResourceId;
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
+		ListViewBinder() {
 			
-			LinearLayout accView;
+			String[] cols = TableModel.getModel(AccountsTableModel.class).getColumnNames();
 			
-			Account acc = getItem(position);
-			
-			String title = acc.getTitle();
-			Map<Currency, Funds> funds = acc.getFunds();
-			AccountType type = acc.getType();
-			
-			if (convertView == null) {
-				accView = new LinearLayout(getContext());
-				LayoutInflater li = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				li.inflate(mResource, accView, true);				
-			} else {
-				accView = (LinearLayout) convertView;
+			for(int i=0; i< cols.length; i++) {
+				mColIdx.put(cols[i], i);
 			}
 			
-			TextView infoTV = (TextView)accView.findViewById(R.id.acc_info);
-			TextView titleTV = (TextView)accView.findViewById(R.id.acc_title);
-			TextView lastUpdatedTV = (TextView)accView.findViewById(R.id.acc_last_updated);
-
-			infoTV.setText(title);
-			titleTV.setText(title);
-			lastUpdatedTV.setText(title);
-			
-			return accView;
-		}
-		
-	}
-	
-	private class LoadAccountsTask extends AsyncTask<Void, Void, List<Account>> {
-
-		@Override
-		protected List<Account> doInBackground(Void... params) {
-			DomainRequestContext.create(mDba);
-			return DomainRequestContext.getInstance().getGatewayRegistry().get(Account.class).findList(null, null);
 		}
 		
 		@Override
-		protected void onPostExecute(List<Account> result) {
-			mAccounts.addAll(result);
-			mListAdapter.notifyDataSetChanged();
-		}
-		
+		public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+			return true;
+		}		
 	}
-	
-	private DBAccess mDba = null;
-	
-	private  List<Account> mAccounts = new ArrayList<Account>(); 
-	private  AccountsArrayAdapter mListAdapter = null; 
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mDba = new DBAccess(getActivity());
 	}
-	
+		
 	@Override
-	public void onStart() {
-		super.onStart();
-		mListAdapter = new AccountsArrayAdapter(getActivity(), R.layout.accounts_list_item, mAccounts);
-		setListAdapter(mListAdapter);
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		
+		setListAdapter(mAdapter);		
 	}
 	
 	@Override
@@ -105,4 +69,18 @@ public class AccountsFragment extends ListFragment {
 			Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.accounts_fragment, container, false);
 	}
+	
+	
+	private final String[] PROJECTION = {
+		AccountsTableModel.ID,	
+		AccountsTableModel.TITLE,	
+		AccountsTableModel.TYPE_ID	
+	};
+		
+	private final int[] VIEWS = {1, 2, 3};
+	
+	private DBAccess mDba = null;	
+	private  List<Account> mAccounts = new ArrayList<Account>(); 
+	private  SimpleCursorAdapter mAdapter = null; 
+	
 }

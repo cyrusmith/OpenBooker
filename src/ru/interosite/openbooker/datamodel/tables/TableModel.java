@@ -95,6 +95,16 @@ public class TableModel {
 		return new ArrayList<Column>(mColumns.values());
 	}
 	
+	public final String[] getColumnNames() {
+		List<Column> cols = getColumns();
+		String[] colsWithId = new String[cols.size()+1];
+		colsWithId[0] = TableModel.ID;
+		for(int i=1; i<colsWithId.length; i++) {
+			colsWithId[i] = cols.get(i-1).getName();
+		}		
+		return colsWithId;
+	}
+	
 	public final String getTypeFor(String colName) {
 		Column col = mColumns.get(colName);
 		if(col==null) {

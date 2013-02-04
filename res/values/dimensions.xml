@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="balance_height">60dp</dimen>
+    <dimen name="account_list_item_height">60dp</dimen>
     <dimen name="account_type_icon_width">10dp</dimen>
 </resources>

@@ -70,7 +70,7 @@ public class Accounts {
 	public void findsAccounts() {				
 
 		DatabaseGateway accountGateway = mGatewayRegistry.get(Account.class);
-		Cursor c = accountGateway.findAll(null, null);
+		Cursor c = accountGateway.find(null, null);
 		assertThat(c, notNullValue());
 	}
 	

@@ -1,5 +1,7 @@
 package ru.interosite.openbooker.datamodel.gateway;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -30,7 +32,7 @@ public abstract class DatabaseGateway {
 		mEntitiesFactory = DomainRequestContext.getInstance().getEntitiesFactory();
 	}
 	
-	public Cursor findAll(String orderCol, String orderDir) {
+	public Cursor find(String orderCol, String orderDir) {
 		String orderBy = null;
 		if(orderCol!=null) {
 			orderBy = orderCol;
@@ -39,7 +41,7 @@ public abstract class DatabaseGateway {
 			}
 		}
 		SQLiteDatabase db = mDba.getReadableDatabase();
-		return db.query(getTableName(), getColumns(), null, null, null, null, orderBy);		
+		return db.query(getTableName(), getTableModel().getColumnNames(), null, null, null, null, orderBy);		
 	}
 	
 	public final BaseEntity findById(long id) {
@@ -54,7 +56,7 @@ public abstract class DatabaseGateway {
 		}
 		
 		SQLiteDatabase db = mDba.getReadableDatabase();
-		Cursor c = db.query(getTableName(), getColumns(), TableModel.ID + "=?", new String[]{String.valueOf(id)}, null, null, null);
+		Cursor c = db.query(getTableName(), getTableModel().getColumnNames(), TableModel.ID + "=?", new String[]{String.valueOf(id)}, null, null, null);
 		if(c!=null) {
 			try {
 				if(c.getCount()==1) {
@@ -123,15 +125,6 @@ public abstract class DatabaseGateway {
 	protected final String getTableName() {
 		return getTableModel().getTableName();
 	}
-	
-	protected final String[] getColumns() {
-		List<Column> cols = getTableModel().getColumns();
-		String[] colNames = new String[cols.size()];
-		for(int i=0; i < colNames.length; i++) {
-			colNames[i] = cols.get(i).getName();
-		}
-		return colNames;
-	}	
 	
 	protected String[] getIdentityWhereArgs(BaseEntity entity) {
 		return new String[]{ String.valueOf(entity.getId()) };
